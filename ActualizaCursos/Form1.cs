@@ -1,10 +1,12 @@
 using ClosedXML.Excel;
 using CsvHelper;
+using CsvHelper.Configuration;
 using DocumentFormat.OpenXml.Bibliography;
 using System.Data;
 using System.Formats.Asn1;
 using System.Globalization;
 using System.Reflection.Emit;
+using System.Security.Cryptography;
 using static System.Net.WebRequestMethods;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
@@ -55,14 +57,43 @@ namespace ActualizaCursos
             return ruta;
         }
 
+        public string corrigeTel(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+
+            // Si contiene notación científica (E+), lo convertimos numéricamente primero
+            if (text.Contains("E+", StringComparison.OrdinalIgnoreCase))
+            {
+                // Reemplazamos la coma por punto si es necesario para la cultura invariable
+                string limpio = text.Replace(',', '.');
+                if (double.TryParse(limpio, NumberStyles.Any, CultureInfo.InvariantCulture, out double numero))
+                {
+                    // Convertimos el double a un string sin decimales (formato largo)
+                    return numero.ToString("F0", CultureInfo.InvariantCulture);
+                }
+            }
+
+            return text; // Si ya es texto normal, lo devuelve tal cual
+        }
+
         public DataTable cargar_csv(string archivo)
         {
             DataTable dt = new DataTable();
+            FileStreamOptions opcionesArchivo = new FileStreamOptions();
+
+            opcionesArchivo.Share = FileShare.ReadWrite;
+            opcionesArchivo.Access = FileAccess.Read;
+            opcionesArchivo.Mode = FileMode.Open;
 
 
-            using (var reader = new StreamReader(archivo))
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+                Delimiter = "," // Cambia aquí por el separador que necesites (ej. "\t" para pestañas)
+            };
+
+            using (var reader = new StreamReader(archivo, opcionesArchivo))
+            {
+                using (var csv = new CsvReader(reader, config))
                 {
                     using (var dr = new CsvDataReader(csv))
                     {
@@ -71,6 +102,27 @@ namespace ActualizaCursos
                 }
             }
 
+            if (dt.Columns.Count == 1)
+            {
+                dt.Rows.Clear();
+                dt.Columns.Clear();
+
+                var config2 = new CsvConfiguration(CultureInfo.InvariantCulture)
+                {
+                    Delimiter = "\t" // Cambia aquí por el separador que necesites (ej. "\t" para pestañas)
+                };
+
+                using (var reader = new StreamReader(archivo, opcionesArchivo))
+                {
+                    using (var csv = new CsvReader(reader, config2))
+                    {
+                        using (var dr = new CsvDataReader(csv))
+                        {
+                            dt.Load(dr);
+                        }
+                    }
+                }
+            }
 
             return dt;
         }
@@ -78,9 +130,15 @@ namespace ActualizaCursos
         public DataTable cargar_excel(string archivo)
         {
             DataTable dt = new DataTable();
+            FileStreamOptions opcionesArchivo = new FileStreamOptions();
 
+            opcionesArchivo.Share = FileShare.ReadWrite;
+            opcionesArchivo.Access = FileAccess.Read;
+            opcionesArchivo.Mode = FileMode.Open;
 
-            using var workbook = new XLWorkbook(archivo);
+            FileStream fs = new FileStream(archivo, opcionesArchivo);
+
+            using var workbook = new XLWorkbook(fs);
 
             for (int i = 0; i < workbook.Worksheets.Count; i++)
             {
@@ -121,12 +179,12 @@ namespace ActualizaCursos
         }
 
         public Object[] exportar_fila_dgv(DataGridViewCellCollection fila_dgv)
-        {            
+        {
             Object[] valores = new object[fila_dgv.Count];
 
             for (int i = 0; i < fila_dgv.Count; i++)
-            {                
-                valores[i]= fila_dgv[i].Value;                
+            {
+                valores[i] = fila_dgv[i].Value;
             }
 
             return valores;
@@ -142,7 +200,7 @@ namespace ActualizaCursos
 
                     for (int i = 0; i < dataGridView1.ColumnCount; i++)
                     {
-                        dt_export.Columns.Add(dataGridView1.Columns[i].Name);
+                        dt_export.Columns.Add(dataGridView1.Columns[i].HeaderText);
                     }
 
                     for (int i = 0; i < dataGridView1.RowCount; i++)
@@ -155,7 +213,7 @@ namespace ActualizaCursos
 
                     for (int i = 0; i < dataGridView2.ColumnCount; i++)
                     {
-                        dt_export.Columns.Add(dataGridView2.Columns[i].Name);
+                        dt_export.Columns.Add(dataGridView2.Columns[i].HeaderText);
                     }
 
                     for (int i = 0; i < dataGridView2.RowCount; i++)
@@ -168,25 +226,12 @@ namespace ActualizaCursos
 
                     for (int i = 0; i < dataGridView3.ColumnCount; i++)
                     {
-                        dt_export.Columns.Add(dataGridView3.Columns[i].Name);
+                        dt_export.Columns.Add(dataGridView3.Columns[i].HeaderText);
                     }
 
                     for (int i = 0; i < dataGridView3.RowCount; i++)
                     {
                         dt_export.Rows.Add(exportar_fila_dgv(dataGridView3.Rows[i].Cells));
-                    }
-                    break;
-
-                case 4:
-
-                    for (int i = 0; i < dataGridView4.ColumnCount; i++)
-                    {
-                        dt_export.Columns.Add(dataGridView4.Columns[i].Name);
-                    }
-
-                    for (int i = 0; i < dataGridView4.RowCount; i++)
-                    {
-                        dt_export.Rows.Add(exportar_fila_dgv(dataGridView4.Rows[i].Cells));
                     }
                     break;
 
@@ -219,7 +264,8 @@ namespace ActualizaCursos
                     linea += dataTable.Rows[i][j].ToString() + "\t";
                 }
 
-                if (i+1 < dataTable.Rows.Count) {
+                if (i + 1 < dataTable.Rows.Count)
+                {
                     textoRespuesta += linea + "\r\n";
                 }
                 else
@@ -321,8 +367,9 @@ namespace ActualizaCursos
                 dataGridView1.DataSource = null;
                 dataGridView1.Columns.Clear();
                 dataGridView1.Rows.Clear();
-                dataGridView1.DataSource = numerarDataTable(adaptarDataTable(textoCopiado, 1));
-                dataGridView1.Columns["#"].Width = 50;
+                //dataGridView1.DataSource = numerarDataTable(adaptarDataTable(textoCopiado, 1));
+                dataGridView1.DataSource = adaptarDataTable(textoCopiado, 1);
+                //dataGridView1.Columns["#"].Width = 50;
 
                 i = dataGridView1.Rows.Count - 1;
                 /* while (ultimo_vacio.Length == 0)
@@ -411,47 +458,39 @@ namespace ActualizaCursos
                 }
             }
 
-            if (dataGridView4.ContainsFocus == true)
-            {
-                if (dataGridView4.Rows.Count > 0)
-                {
-                    Clipboard.SetText(copiarTablaPortapapeles(4));
-                }
-            }
-
         }
 
         public void obtener_nuevos()
         {
-            string email = "",repe="";
-            int coincidencias = 0, repetido=0;
+            string email = "", repe = "";
+            int coincidencias = 0, repetido = 0;
 
-            for (int i=0; i<dt_datos_nuevos.Columns.Count;i++)
+            for (int i = 0; i < dt_datos_nuevos.Columns.Count; i++)
             {
                 dataGridView2.Columns.Add(dt_datos_nuevos.Columns[i].ColumnName, dt_datos_nuevos.Columns[i].ColumnName);
             }
-            
-            for (int i = 0; i < dt_datos_nuevos.Rows.Count; i++) 
+
+            for (int i = 0; i < dt_datos_nuevos.Rows.Count; i++)
             {
                 email = dt_datos_nuevos.Rows[i][5].ToString();
                 coincidencias = 0;
 
                 for (int j = 0; j < dataGridView1.Rows.Count; j++)
                 {
-                    if (email== dataGridView1[5+1,j].Value.ToString())
+                    if (email == dataGridView1[5, j].Value.ToString())
                     {
                         coincidencias++;
                     }
                 }
 
-                if (coincidencias==0)
+                if (coincidencias == 0)
                 {
                     repetido = 0;
                     for (int j = 0; j < dataGridView2.Rows.Count; j++)
                     {
                         if (dataGridView2.Rows.Count > 1)
                         {
-                            repe = dataGridView2[5,j].Value.ToString();
+                            repe = dataGridView2[5, j].Value.ToString();
                             if (email == repe)
                             {
                                 repetido++;
@@ -462,12 +501,161 @@ namespace ActualizaCursos
                     if (repetido == 0)
                     {
                         //MessageBox.Show(dt_datos_nuevos.Rows[i].ItemArray.ToString());
+                        //dt_datos_nuevos.Rows[i][7] = corrigeTel(dt_datos_nuevos.Rows[i][7].ToString());
                         dataGridView2.Rows.Add(dt_datos_nuevos.Rows[i].ItemArray);
-                    }                    
+                    }
                 }
             }
-            
-            label2.Text = "Registros: "+dataGridView2.Rows.Count;
+
+            label2.Text = "Registros: " + dataGridView2.Rows.Count;
+
+        }
+
+        public Decimal calificaciones(string correo_buscar)
+        {
+            Decimal calificacion = 0;
+            int col_cal = 0, col_correo = 0;
+
+            if (radioButton1.Checked)
+            {
+                col_correo = 5;
+                col_cal = dt_calificaciones.Columns.Count - 2;
+            }
+            else
+            {
+                col_correo = 1;
+                col_cal = dt_calificaciones.Columns.Count - 1;
+            }
+
+            for (int i = 0; i < dt_calificaciones.Rows.Count; i++)
+            {
+                if (correo_buscar == dt_calificaciones.Rows[i][col_correo].ToString())
+                {
+                    if (Decimal.TryParse(dt_calificaciones.Rows[i][col_cal].ToString(), out calificacion))
+                    {
+
+                    }
+                }
+            }
+
+            return calificacion;
+
+        }
+
+        public void actividades()
+        {
+            string email = "", formato_fecha = "dd/MM/yyyy HH:mm";
+            int coincidencia = 0,repetido=0;
+            int[] asistencia = new int[12];
+            DateTime fecha_posible = DateTime.Now;
+            Decimal calificacion = 0, min_apro = 0;
+
+            if (Decimal.TryParse(numericUpDown1.Value.ToString(), out min_apro))
+            {
+
+            }
+
+            for (int i = 0; i < dt_datos_nuevos.Rows.Count; i++)
+            {
+                email = dt_datos_nuevos.Rows[i][5].ToString();
+                coincidencia = 0;
+
+                for (int z = 0; z < asistencia.Length; z++)
+                {
+                    asistencia[z] = 0;
+                }
+
+                for (int j = 0; j < dt_actividades.Rows.Count; j++)
+                {
+                    if (email == dt_actividades.Rows[j][1].ToString())
+                    {
+                        coincidencia = 1;
+
+                        for (int k = 0; k < dt_actividades.Columns.Count; k++)
+                        {
+                            if (DateTime.TryParse(dt_actividades.Rows[j][k].ToString(), out fecha_posible))
+                            {
+                                fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
+
+                                if (fecha_posible.Year != 1969)
+                                {
+                                    asistencia[fecha_posible.Month - 1] = 1;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+
+                Object[] valores = new object[dataGridView3.Columns.Count];
+                int tot_asistencias = 0;
+                repetido = 0;
+
+                valores[0] = dt_datos_nuevos.Rows[i][1].ToString();//matricula
+                valores[1] = dt_datos_nuevos.Rows[i][2].ToString();//nombre (s)
+                valores[2] = dt_datos_nuevos.Rows[i][3].ToString();//primer apellido
+                valores[3] = dt_datos_nuevos.Rows[i][4].ToString();//segundo apellido
+                valores[4] = dt_datos_nuevos.Rows[i][5].ToString();//email
+
+                for (int a = 0; a < asistencia.Length; a++)
+                {
+                    tot_asistencias += asistencia[a];
+                }
+
+                valores[5] = tot_asistencias;//tot_asistencias
+                valores[6] = tot_asistencias;//tot_modulos_activos
+
+                valores[7] = asistencia[0];//enero
+                valores[8] = asistencia[1];//febrero
+                valores[9] = asistencia[2];//marzo
+                valores[10] = asistencia[3];//abril
+                valores[11] = asistencia[4];//mayo
+                valores[12] = asistencia[5];//junio
+                valores[13] = asistencia[6];//julio
+                valores[14] = asistencia[7];//agosto
+                valores[15] = asistencia[8];//septiembre
+                valores[16] = asistencia[9];//octubre
+                valores[17] = asistencia[10];//noviembre
+                valores[18] = asistencia[11];//diciembre
+
+                valores[19] = " ";//deserción
+
+                calificacion = calificaciones(dt_datos_nuevos.Rows[i][5].ToString());
+                valores[20] = calificacion;//calificacion
+
+
+                if (calificacion >= min_apro)//certificado
+                {
+                    valores[21] = "Certificado";
+                }
+                else
+                {
+                    valores[21] = "No Aprobado";
+                }
+
+                for(int j = 0; j < dataGridView3.Rows.Count; j++)
+                {
+                    if (email == dataGridView3[4,j].Value.ToString())
+                    {
+                        repetido++;
+                    }
+                }
+
+                if (repetido==0) 
+                {
+                    dataGridView3.Rows.Add(valores);
+                }
+
+            }
+
+            for (int i = 0; i < dataGridView3.Rows.Count; i++)
+            {
+                dataGridView3[19, i].Style.BackColor = SystemColors.ControlDark;
+            }
+
+            label3.Text = "Registros: " + dataGridView3.Rows.Count.ToString();
+
 
         }
 
@@ -476,19 +664,23 @@ namespace ActualizaCursos
             dataGridView2.Rows.Clear();
             dataGridView2.Columns.Clear();
             dataGridView3.Rows.Clear();
-            dataGridView3.Columns.Clear();
-            dataGridView4.Rows.Clear();
-            dataGridView4.Columns.Clear();
-
-
 
             obtener_nuevos();
-        }
+            /*
+            for(int i = 0; i < dataGridView2.Rows.Count; i++)
+            {
+                dataGridView2[7, i].Value = corrigeTel(dataGridView2[7, i].Value.ToString());
+            }
+            */
+            actividades();
 
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             timer1.Start();
+
+            //MessageBox.Show(DateTime.Today.Month.ToString());
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -538,7 +730,7 @@ namespace ActualizaCursos
                 }
             }
         }
-        
+
         private void button3_Click(object sender, EventArgs e)
         {
             textBox3.Text = string.Empty;
@@ -571,7 +763,7 @@ namespace ActualizaCursos
             }
 
         }
-        
+
         private void button4_Click(object sender, EventArgs e)
         {
             procesar();
@@ -595,10 +787,6 @@ namespace ActualizaCursos
             else
             {
 
-                if (dataGridView2.ContainsFocus == true)
-                {
-                    pegar_dgv2();
-                }
             }
         }
 
@@ -617,12 +805,12 @@ namespace ActualizaCursos
         {
             pegar_dgv1();
         }
-        
+
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             copiar_datos();
         }
-        
+
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             label6.Text = "Archivo CSV  Reporte de Actividades";
@@ -640,7 +828,7 @@ namespace ActualizaCursos
         private void timer1_Tick(object sender, EventArgs e)
         {
 
-            if (textBox1.Text.Length>0 && textBox2.Text.Length>0 && textBox3.Text.Length>0)
+            if (textBox1.Text.Length > 0 && textBox2.Text.Length > 0 && textBox3.Text.Length > 0)
             {
                 button4.Enabled = true;
             }
@@ -648,6 +836,151 @@ namespace ActualizaCursos
             {
                 button4.Enabled = false;
             }
+
+            if (dataGridView2.Rows.Count > 0 && dataGridView3.Rows.Count > 0)
+            {
+                button5.Enabled = true;
+                button6.Enabled = true;
+            }
+            else
+            {
+                button5.Enabled = false;
+                button6.Enabled = false;
+            }
+        }
+
+        private void dataGridView1_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            // Crear el texto del número (índice base 1)
+            string rowNumber = (e.RowIndex + 1).ToString();
+
+            // Configurar la fuente y el color del texto
+            Font font = new Font("Arial", 9, FontStyle.Bold);
+            Brush brush = Brushes.Black;
+
+            // Calcular la posición del texto para que quede centrado
+            StringFormat centerFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            // Definir los límites del área del RowHeader
+            Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, dataGridView1.RowHeadersWidth, e.RowBounds.Height);
+
+            // Dibujar el número en el RowHeader
+            e.Graphics.DrawString(rowNumber, font, brush, headerBounds, centerFormat);
+        }
+
+        private void dataGridView2_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            // Crear el texto del número (índice base 1)
+            string rowNumber = (e.RowIndex + 1).ToString();
+
+            // Configurar la fuente y el color del texto
+            Font font = new Font("Arial", 9, FontStyle.Bold);
+            Brush brush = Brushes.Black;
+
+            // Calcular la posición del texto para que quede centrado
+            StringFormat centerFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            // Definir los límites del área del RowHeader
+            Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, dataGridView2.RowHeadersWidth, e.RowBounds.Height);
+
+            // Dibujar el número en el RowHeader
+            e.Graphics.DrawString(rowNumber, font, brush, headerBounds, centerFormat);
+        }
+
+        private void dataGridView3_RowPostPaint(object sender, DataGridViewRowPostPaintEventArgs e)
+        {
+            // Crear el texto del número (índice base 1)
+            string rowNumber = (e.RowIndex + 1).ToString();
+
+            // Configurar la fuente y el color del texto
+            Font font = new Font("Arial", 9, FontStyle.Bold);
+            Brush brush = Brushes.Black;
+
+            // Calcular la posición del texto para que quede centrado
+            StringFormat centerFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            // Definir los límites del área del RowHeader
+            Rectangle headerBounds = new Rectangle(e.RowBounds.Left, e.RowBounds.Top, dataGridView3.RowHeadersWidth, e.RowBounds.Height);
+
+            // Dibujar el número en el RowHeader
+            e.Graphics.DrawString(rowNumber, font, brush, headerBounds, centerFormat);
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBox1.Checked)
+            {
+                dataGridView3.Columns[0].Frozen = true;
+                dataGridView3.Columns[1].Frozen = true;
+                dataGridView3.Columns[2].Frozen = true;
+                dataGridView3.Columns[3].Frozen = true;
+                dataGridView3.Columns[4].Frozen = true;
+
+            }
+            else
+            {
+                dataGridView3.Columns[0].Frozen = false;
+                dataGridView3.Columns[1].Frozen = false;
+                dataGridView3.Columns[2].Frozen = false;
+                dataGridView3.Columns[3].Frozen = false;
+                dataGridView3.Columns[4].Frozen = false;
+            }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            if (dataGridView3.Rows.Count > 0)
+            {
+                SaveFileDialog guardar = new SaveFileDialog();
+
+                guardar.Filter = "Archivos de Excel (*.xlsx)|*.xlsx";
+                guardar.Title = "Guardar archivo";
+
+                if (guardar.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    XLWorkbook wb = new XLWorkbook();
+                    wb.Worksheets.Add(exportar_dgv(2), "Alumnos Nuevos");
+                    wb.Worksheets.Add(exportar_dgv(3), "Actividades-Calificaciones");
+                    wb.SaveAs(@"" + guardar.FileName);
+                    MessageBox.Show("Archivo guardado correctamente", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                }
+            }
+        }
+
+        private void button6_Click(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = null;
+            //dataGridView1.Rows.Clear();
+            //dataGridView1.Columns.Clear();
+
+            dataGridView2.Rows.Clear();
+            dataGridView2.Columns.Clear();
+
+            dataGridView3.Rows.Clear();    
+
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+
+            label12.Text = "Registros:";
+            label2.Text = "Registros:";
+            label3.Text = "Registros:";
+            numericUpDown1.Value = 70;
+
+            tabControl1.SelectedIndex = 0;
         }
     
     }
