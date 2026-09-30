@@ -797,7 +797,6 @@
             // 
             // timer1
             // 
-            timer1.Interval = 250;
             timer1.Tick += timer1_Tick;
             // 
             // Form1
@@ -811,7 +810,7 @@
             MainMenuStrip = menuStrip1;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Actualiza Cursos";
+            Text = "Actualiza Cursos v0.4";
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);

@@ -21,9 +21,10 @@ namespace ActualizaCursos
         }
 
         //Tot Repetidos
-        int tot_repetidos = 0;
+        int tot_repetidos=0,tot_repetidos2 = 0;
 
         //Tablas Globales
+        DataTable dt_datos_base = new DataTable();
         DataTable dt_datos_nuevos = new DataTable();
         DataTable dt_calificaciones = new DataTable();
         DataTable dt_actividades = new DataTable();        
@@ -78,6 +79,65 @@ namespace ActualizaCursos
             return text; // Si ya es texto normal, lo devuelve tal cual
         }
 
+        public CsvConfiguration verificar_csv(string archivo)
+        {
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture);
+
+            if (System.IO.File.Exists(archivo))
+            {
+                FileStreamOptions opcionesArchivo = new FileStreamOptions();
+
+                opcionesArchivo.Share = FileShare.ReadWrite;
+                opcionesArchivo.Access = FileAccess.Read;
+                opcionesArchivo.Mode = FileMode.Open;
+
+                // El 'using' asegura que el archivo se cierre automáticamente al terminar
+                using (StreamReader sr = new StreamReader(archivo,opcionesArchivo))
+                {
+                    string linea;
+                    // ReadLine() devuelve null cuando llega al final del archivo
+                    linea = sr.ReadLine();                    
+
+                    if (linea.Contains("\t"))
+                    {
+                        config.Delimiter = "\t";
+                    }
+                    else
+                    {
+                        if (linea.Contains(","))
+                        {
+                            config.Delimiter = ",";
+                        }
+                        else
+                        {
+                            if (linea.Contains(";"))
+                            {
+                                config.Delimiter = ";";
+                            }
+                        }
+                    }
+
+                    if (linea.Contains("\""))
+                    {
+                        config.Mode = CsvMode.RFC4180;
+                    }
+
+
+                   /* while ((linea = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(linea); // Procesa la línea aquí
+                    }*/
+                }
+            }
+            else
+            {
+                Console.WriteLine("El archivo no existe.");
+            }
+
+
+            return config;
+        }
+
         public DataTable cargar_csv(string archivo)
         {
             DataTable dt = new DataTable();
@@ -88,7 +148,8 @@ namespace ActualizaCursos
             opcionesArchivo.Mode = FileMode.Open;
 
             CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture);
-            config.Delimiter = ",";
+
+            config = verificar_csv(archivo);
 
             try
             {
@@ -102,67 +163,11 @@ namespace ActualizaCursos
                         }
                     }
                 }
-
-                if (dt.Columns.Count == 1)
-                {
-                    dt.Rows.Clear();
-                    dt.Columns.Clear();                   
-
-                    config.Delimiter = "\t";
-
-                    using (var reader = new StreamReader(archivo, opcionesArchivo))
-                    {
-                        using (var csv = new CsvReader(reader, config))
-                        {
-                            using (var dr = new CsvDataReader(csv))
-                            {
-                                dt.Load(dr);
-                            }
-                        }
-                    }
-                }
-
+               
             }
             catch(BadDataException ex)
             {
-                try
-                {
-                    config.Mode = CsvMode.RFC4180;
-
-                    using (var reader = new StreamReader(archivo, opcionesArchivo))
-                    {
-                        using (var csv = new CsvReader(reader, config))
-                        {
-                            using (var dr = new CsvDataReader(csv))
-                            {
-                                dt.Load(dr);
-                            }
-                        }
-                    }
-
-                    if (dt.Columns.Count == 1)
-                    {
-                        dt.Rows.Clear();
-                        dt.Columns.Clear();
-
-                        config.Delimiter = "\t";
-
-                        using (var reader = new StreamReader(archivo, opcionesArchivo))
-                        {
-                            using (var csv = new CsvReader(reader, config))
-                            {
-                                using (var dr = new CsvDataReader(csv))
-                                {
-                                    dt.Load(dr);
-                                }
-                            }
-                        }
-                    }
-                }
-                catch(BadDataException ex2) 
-                { 
-
-                }
+                MessageBox.Show(ex.Message);                
             }
 
             return dt;
@@ -410,10 +415,16 @@ namespace ActualizaCursos
                 dataGridView1.Rows.Clear();
                 //dataGridView1.DataSource = numerarDataTable(adaptarDataTable(textoCopiado, 1));
                 dataGridView1.DataSource = adaptarDataTable(textoCopiado, 1);
-                //dataGridView1.Columns["#"].Width = 50;
 
+                if (dataGridView1.Columns.Count>0) 
+                {
+                    dataGridView1.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                }
+
+                //dataGridView1.Columns["#"].Width = 50;
+                /* 
                 i = dataGridView1.Rows.Count - 1;
-                /* while (ultimo_vacio.Length == 0)
+                while (ultimo_vacio.Length == 0)
                  {
                      ultimo_vacio = dataGridView1[1, i].Value.ToString();
 
@@ -518,7 +529,7 @@ namespace ActualizaCursos
 
                 for (int j = 0; j < dataGridView1.Rows.Count; j++)
                 {
-                    if (email == dataGridView1[5, j].Value.ToString())
+                    if (email == dataGridView1[0, j].Value.ToString())
                     {
                         coincidencias++;
                     }
@@ -532,6 +543,7 @@ namespace ActualizaCursos
                         if (dataGridView2.Rows.Count > 1)
                         {
                             repe = dataGridView2[5, j].Value.ToString();
+
                             if (email == repe)
                             {
                                 repetido++;
@@ -544,10 +556,11 @@ namespace ActualizaCursos
                         //MessageBox.Show(dt_datos_nuevos.Rows[i].ItemArray.ToString());
                         //dt_datos_nuevos.Rows[i][7] = corrigeTel(dt_datos_nuevos.Rows[i][7].ToString());
                         dataGridView2.Rows.Add(dt_datos_nuevos.Rows[i].ItemArray);
+                        dt_datos_base.Rows.Add(dt_datos_nuevos.Rows[i][5].ToString());
                     }
                     else
                     {
-                        //tot_repetidos++;
+                        tot_repetidos++;
                         //MessageBox.Show(dt_datos_nuevos.Rows[i].ItemArray[5].ToString());
                     }
                 }
@@ -556,7 +569,7 @@ namespace ActualizaCursos
             label2.Text = "Registros: " + dataGridView2.Rows.Count;
 
         }
-
+               
         public Decimal calificaciones(string correo_buscar)
         {
             Decimal calificacion = 0;
@@ -591,7 +604,7 @@ namespace ActualizaCursos
         public void actividades()
         {
             string email = "", formato_fecha = "dd/MM/yyyy HH:mm";
-            int coincidencia = 0,repetido=0, col_cont=1;
+            int coincidencia = 0,repetido=0, col_cont=1,indice=-1;
             int[] asistencia = new int[12];
             DateTime fecha_posible = DateTime.Now;
             Decimal calificacion = 0, min_apro = 0;
@@ -601,10 +614,11 @@ namespace ActualizaCursos
                 //no va nada
             }
 
-            for (int i = 0; i < dt_datos_nuevos.Rows.Count; i++)
+            for (int i = 0; i < dt_datos_base.Rows.Count; i++)
             {
-                email = dt_datos_nuevos.Rows[i][5].ToString();
+                email = dt_datos_base.Rows[i][0].ToString();
                 coincidencia = 0;
+                indice = -1;
 
                 for (int z = 0; z < asistencia.Length; z++)
                 {
@@ -621,86 +635,99 @@ namespace ActualizaCursos
                         {
                             if (DateTime.TryParse(dt_actividades.Rows[j][k].ToString(), out fecha_posible))
                             {
-                                fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
+                                //fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
+
+                                //if (DateTime.TryParseExact(dt_actividades.Rows[j][k].ToString(),formato_fecha, CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha_posible_exacta)) {
 
                                 if (fecha_posible.Year != 1969)
                                 {
                                     asistencia[fecha_posible.Month - 1] = 1;
                                 }
+                                //}
+
 
                             }
                         }
                     }
                 }
 
-
-                Object[] valores = new object[dataGridView3.Columns.Count];
-                int tot_asistencias = 0;
-                repetido = 0;
-
-                valores[0] = col_cont++;
-                valores[1] = dt_datos_nuevos.Rows[i][1].ToString();//matricula
-                valores[2] = dt_datos_nuevos.Rows[i][2].ToString();//nombre (s)
-                valores[3] = dt_datos_nuevos.Rows[i][3].ToString();//primer apellido
-                valores[4] = dt_datos_nuevos.Rows[i][4].ToString();//segundo apellido
-                valores[5] = dt_datos_nuevos.Rows[i][5].ToString();//email
-
-
-                for (int a = 0; a < asistencia.Length; a++)
+                for (int l = 0; l < dt_datos_nuevos.Rows.Count; l++)
                 {
-                    tot_asistencias += asistencia[a];
-                }
-
-                
-                valores[6] = tot_asistencias;//tot_asistencias
-                valores[7] = tot_asistencias;//tot_modulos_activos
-
-                valores[8] = asistencia[0];//enero
-                valores[9] = asistencia[1];//febrero
-                valores[10] = asistencia[2];//marzo
-                valores[11] = asistencia[3];//abril
-                valores[12] = asistencia[4];//mayo
-                valores[13] = asistencia[5];//junio
-                valores[14] = asistencia[6];//julio
-                valores[15] = asistencia[7];//agosto
-                valores[16] = asistencia[8];//septiembre
-                valores[17] = asistencia[9];//octubre
-                valores[18] = asistencia[10];//noviembre
-                valores[19] = asistencia[11];//diciembre
-                
-                valores[20] = " ";//deserción
-
-                calificacion = calificaciones(dt_datos_nuevos.Rows[i][5].ToString());
-                valores[21] = calificacion;//calificacion
-
-
-                if (calificacion >= min_apro)//certificado
-                {
-                    valores[22] = "Certificado";
-                }
-                else
-                {
-                    valores[22] = "No Aprobado";
-                }
-
-                for(int j = 0; j < dataGridView3.Rows.Count; j++)
-                {
-                    if (email == dataGridView3[5,j].Value.ToString())
+                    if (email == dt_datos_nuevos.Rows[l][5].ToString())
                     {
-                        repetido++;
+                        indice = l;
+                        break;
                     }
                 }
 
-                if (repetido==0) 
-                {
-                    dataGridView3.Rows.Add(valores);
-                }
-                else
-                {
-                    tot_repetidos++;
-                    col_cont--;
-                }
+                if (indice>=0) { 
+                    Object[] valores = new object[dataGridView3.Columns.Count];
+                    int tot_asistencias = 0;
+                    repetido = 0;
 
+                    valores[0] = col_cont++;
+                    valores[1] = dt_datos_nuevos.Rows[indice][1].ToString();//matricula
+                    valores[2] = dt_datos_nuevos.Rows[indice][2].ToString();//nombre (s)
+                    valores[3] = dt_datos_nuevos.Rows[indice][3].ToString();//primer apellido
+                    valores[4] = dt_datos_nuevos.Rows[indice][4].ToString();//segundo apellido
+                    valores[5] = dt_datos_nuevos.Rows[indice][5].ToString();//email
+
+
+                    for (int a = 0; a < asistencia.Length; a++)
+                    {
+                        tot_asistencias += asistencia[a];
+                    }
+
+
+                    valores[6] = tot_asistencias;//tot_asistencias
+                    valores[7] = tot_asistencias;//tot_modulos_activos
+
+                    valores[8] = asistencia[0];//enero
+                    valores[9] = asistencia[1];//febrero
+                    valores[10] = asistencia[2];//marzo
+                    valores[11] = asistencia[3];//abril
+                    valores[12] = asistencia[4];//mayo
+                    valores[13] = asistencia[5];//junio
+                    valores[14] = asistencia[6];//julio
+                    valores[15] = asistencia[7];//agosto
+                    valores[16] = asistencia[8];//septiembre
+                    valores[17] = asistencia[9];//octubre
+                    valores[18] = asistencia[10];//noviembre
+                    valores[19] = asistencia[11];//diciembre
+
+                    valores[20] = " ";//deserción
+
+                    calificacion = calificaciones(dt_datos_nuevos.Rows[indice][5].ToString());
+                    valores[21] = calificacion;//calificacion
+
+
+                    if (calificacion >= min_apro)//certificado
+                    {
+                        valores[22] = "Certificado";
+                    }
+                    else
+                    {
+                        valores[22] = "No Aprobado";
+                    }
+
+                    for (int j = 0; j < dataGridView3.Rows.Count; j++)
+                    {
+                        if (email == dataGridView3[5, j].Value.ToString())
+                        {
+                            repetido++;
+                        }
+                    }
+
+                    if (repetido == 0)
+                    {
+                        dataGridView3.Rows.Add(valores);
+                    }
+                    else
+                    {
+                        tot_repetidos2++;
+                        col_cont--;
+                    }
+                }
             }
 
             for (int i = 0; i < dataGridView3.Rows.Count; i++)
@@ -708,9 +735,7 @@ namespace ActualizaCursos
                 dataGridView3[20, i].Style.BackColor = SystemColors.ControlDark;
             }
 
-            label3.Text = "Registros: " + dataGridView3.Rows.Count.ToString();
-
-            
+            label3.Text = "Registros: " + dataGridView3.Rows.Count.ToString();            
 
         }
 
@@ -719,6 +744,10 @@ namespace ActualizaCursos
             dataGridView2.Rows.Clear();
             dataGridView2.Columns.Clear();
             dataGridView3.Rows.Clear();
+
+            dt_datos_base.Rows.Clear();
+            dt_datos_base.Columns.Clear();
+            dt_datos_base = exportar_dgv(1);
 
             obtener_nuevos();
             /*
@@ -826,12 +855,23 @@ namespace ActualizaCursos
         private void button4_Click(object sender, EventArgs e)
         {
             tot_repetidos = 0;
+            tot_repetidos2 = 0;
             procesar();
             tabControl1.SelectedIndex = 2;
             dataGridView2.Focus();
-            MessageBox.Show("El Análisis ha terminado Correctamente\nSe quitaron: "+tot_repetidos+" registros repetidos.", "Analisis Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            label5.Text = "Repetidos Ignorados: " + tot_repetidos;
+            if (tot_repetidos2==0) 
+            {
+                MessageBox.Show("El Análisis ha terminado Correctamente.\nSe quitaron: " + tot_repetidos + " registros repetidos.", "Analisis Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                label5.Text = "Repetidos Descartados: " + tot_repetidos;
+            }
+            else
+            {
+                MessageBox.Show("El Análisis ha terminado Correctamente.\nSe quitaron: " + tot_repetidos + " registros repetidos.\nSe ignoraron: " + tot_repetidos2 + " registros duplicados.", "Analisis Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                label5.Text = "Repetidos Descartados: " + tot_repetidos+" | Repetidos Ignorados: "+tot_repetidos2 ;
+            }
+
+            
         }
 
         private void copiarToolStripMenuItem_Click(object sender, EventArgs e)
