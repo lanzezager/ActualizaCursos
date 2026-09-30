@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="ActualizaCursos/ActualizaCursos.csproj" />
-  <Project Path="Instalador ActualizaCursos/Instalador ActualizaCursos.vdproj" Type="Installer" />
+  <Project Path="Instalador ActualizaCursos/Instalador ActualizaCursos.vdproj" Type="Installer">
+    <Build />
+  </Project>
 </Solution>

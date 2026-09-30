@@ -20,11 +20,13 @@ namespace ActualizaCursos
             InitializeComponent();
         }
 
+        //Tot Repetidos
+        int tot_repetidos = 0;
+
         //Tablas Globales
         DataTable dt_datos_nuevos = new DataTable();
         DataTable dt_calificaciones = new DataTable();
-        DataTable dt_actividades = new DataTable();
-
+        DataTable dt_actividades = new DataTable();        
 
         public string seleccionar_archivo(string tipo_arch)
         {
@@ -85,42 +87,81 @@ namespace ActualizaCursos
             opcionesArchivo.Access = FileAccess.Read;
             opcionesArchivo.Mode = FileMode.Open;
 
+            CsvConfiguration config = new CsvConfiguration(CultureInfo.InvariantCulture);
+            config.Delimiter = ",";
 
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            try
             {
-                Delimiter = "," // Cambia aquí por el separador que necesites (ej. "\t" para pestañas)
-            };
-
-            using (var reader = new StreamReader(archivo, opcionesArchivo))
-            {
-                using (var csv = new CsvReader(reader, config))
-                {
-                    using (var dr = new CsvDataReader(csv))
-                    {
-                        dt.Load(dr);
-                    }
-                }
-            }
-
-            if (dt.Columns.Count == 1)
-            {
-                dt.Rows.Clear();
-                dt.Columns.Clear();
-
-                var config2 = new CsvConfiguration(CultureInfo.InvariantCulture)
-                {
-                    Delimiter = "\t" // Cambia aquí por el separador que necesites (ej. "\t" para pestañas)
-                };
-
                 using (var reader = new StreamReader(archivo, opcionesArchivo))
                 {
-                    using (var csv = new CsvReader(reader, config2))
+                    using (var csv = new CsvReader(reader, config))
                     {
                         using (var dr = new CsvDataReader(csv))
                         {
                             dt.Load(dr);
                         }
                     }
+                }
+
+                if (dt.Columns.Count == 1)
+                {
+                    dt.Rows.Clear();
+                    dt.Columns.Clear();                   
+
+                    config.Delimiter = "\t";
+
+                    using (var reader = new StreamReader(archivo, opcionesArchivo))
+                    {
+                        using (var csv = new CsvReader(reader, config))
+                        {
+                            using (var dr = new CsvDataReader(csv))
+                            {
+                                dt.Load(dr);
+                            }
+                        }
+                    }
+                }
+
+            }
+            catch(BadDataException ex)
+            {
+                try
+                {
+                    config.Mode = CsvMode.RFC4180;
+
+                    using (var reader = new StreamReader(archivo, opcionesArchivo))
+                    {
+                        using (var csv = new CsvReader(reader, config))
+                        {
+                            using (var dr = new CsvDataReader(csv))
+                            {
+                                dt.Load(dr);
+                            }
+                        }
+                    }
+
+                    if (dt.Columns.Count == 1)
+                    {
+                        dt.Rows.Clear();
+                        dt.Columns.Clear();
+
+                        config.Delimiter = "\t";
+
+                        using (var reader = new StreamReader(archivo, opcionesArchivo))
+                        {
+                            using (var csv = new CsvReader(reader, config))
+                            {
+                                using (var dr = new CsvDataReader(csv))
+                                {
+                                    dt.Load(dr);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch(BadDataException ex2) 
+                { 
+
                 }
             }
 
@@ -504,6 +545,11 @@ namespace ActualizaCursos
                         //dt_datos_nuevos.Rows[i][7] = corrigeTel(dt_datos_nuevos.Rows[i][7].ToString());
                         dataGridView2.Rows.Add(dt_datos_nuevos.Rows[i].ItemArray);
                     }
+                    else
+                    {
+                        //tot_repetidos++;
+                        //MessageBox.Show(dt_datos_nuevos.Rows[i].ItemArray[5].ToString());
+                    }
                 }
             }
 
@@ -545,14 +591,14 @@ namespace ActualizaCursos
         public void actividades()
         {
             string email = "", formato_fecha = "dd/MM/yyyy HH:mm";
-            int coincidencia = 0,repetido=0;
+            int coincidencia = 0,repetido=0, col_cont=1;
             int[] asistencia = new int[12];
             DateTime fecha_posible = DateTime.Now;
             Decimal calificacion = 0, min_apro = 0;
 
             if (Decimal.TryParse(numericUpDown1.Value.ToString(), out min_apro))
             {
-
+                //no va nada
             }
 
             for (int i = 0; i < dt_datos_nuevos.Rows.Count; i++)
@@ -592,51 +638,54 @@ namespace ActualizaCursos
                 int tot_asistencias = 0;
                 repetido = 0;
 
-                valores[0] = dt_datos_nuevos.Rows[i][1].ToString();//matricula
-                valores[1] = dt_datos_nuevos.Rows[i][2].ToString();//nombre (s)
-                valores[2] = dt_datos_nuevos.Rows[i][3].ToString();//primer apellido
-                valores[3] = dt_datos_nuevos.Rows[i][4].ToString();//segundo apellido
-                valores[4] = dt_datos_nuevos.Rows[i][5].ToString();//email
+                valores[0] = col_cont++;
+                valores[1] = dt_datos_nuevos.Rows[i][1].ToString();//matricula
+                valores[2] = dt_datos_nuevos.Rows[i][2].ToString();//nombre (s)
+                valores[3] = dt_datos_nuevos.Rows[i][3].ToString();//primer apellido
+                valores[4] = dt_datos_nuevos.Rows[i][4].ToString();//segundo apellido
+                valores[5] = dt_datos_nuevos.Rows[i][5].ToString();//email
+
 
                 for (int a = 0; a < asistencia.Length; a++)
                 {
                     tot_asistencias += asistencia[a];
                 }
 
-                valores[5] = tot_asistencias;//tot_asistencias
-                valores[6] = tot_asistencias;//tot_modulos_activos
+                
+                valores[6] = tot_asistencias;//tot_asistencias
+                valores[7] = tot_asistencias;//tot_modulos_activos
 
-                valores[7] = asistencia[0];//enero
-                valores[8] = asistencia[1];//febrero
-                valores[9] = asistencia[2];//marzo
-                valores[10] = asistencia[3];//abril
-                valores[11] = asistencia[4];//mayo
-                valores[12] = asistencia[5];//junio
-                valores[13] = asistencia[6];//julio
-                valores[14] = asistencia[7];//agosto
-                valores[15] = asistencia[8];//septiembre
-                valores[16] = asistencia[9];//octubre
-                valores[17] = asistencia[10];//noviembre
-                valores[18] = asistencia[11];//diciembre
-
-                valores[19] = " ";//deserción
+                valores[8] = asistencia[0];//enero
+                valores[9] = asistencia[1];//febrero
+                valores[10] = asistencia[2];//marzo
+                valores[11] = asistencia[3];//abril
+                valores[12] = asistencia[4];//mayo
+                valores[13] = asistencia[5];//junio
+                valores[14] = asistencia[6];//julio
+                valores[15] = asistencia[7];//agosto
+                valores[16] = asistencia[8];//septiembre
+                valores[17] = asistencia[9];//octubre
+                valores[18] = asistencia[10];//noviembre
+                valores[19] = asistencia[11];//diciembre
+                
+                valores[20] = " ";//deserción
 
                 calificacion = calificaciones(dt_datos_nuevos.Rows[i][5].ToString());
-                valores[20] = calificacion;//calificacion
+                valores[21] = calificacion;//calificacion
 
 
                 if (calificacion >= min_apro)//certificado
                 {
-                    valores[21] = "Certificado";
+                    valores[22] = "Certificado";
                 }
                 else
                 {
-                    valores[21] = "No Aprobado";
+                    valores[22] = "No Aprobado";
                 }
 
                 for(int j = 0; j < dataGridView3.Rows.Count; j++)
                 {
-                    if (email == dataGridView3[4,j].Value.ToString())
+                    if (email == dataGridView3[5,j].Value.ToString())
                     {
                         repetido++;
                     }
@@ -646,16 +695,22 @@ namespace ActualizaCursos
                 {
                     dataGridView3.Rows.Add(valores);
                 }
+                else
+                {
+                    tot_repetidos++;
+                    col_cont--;
+                }
 
             }
 
             for (int i = 0; i < dataGridView3.Rows.Count; i++)
             {
-                dataGridView3[19, i].Style.BackColor = SystemColors.ControlDark;
+                dataGridView3[20, i].Style.BackColor = SystemColors.ControlDark;
             }
 
             label3.Text = "Registros: " + dataGridView3.Rows.Count.ToString();
 
+            
 
         }
 
@@ -679,6 +734,10 @@ namespace ActualizaCursos
         private void Form1_Load(object sender, EventArgs e)
         {
             timer1.Start();
+            for (int i = 0; i < dataGridView3.Columns.Count; i++)
+            {
+                dataGridView3.Columns[i].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            }
 
             //MessageBox.Show(DateTime.Today.Month.ToString());
         }
@@ -695,7 +754,6 @@ namespace ActualizaCursos
                 dt_datos_nuevos.Columns.Clear();
                 dt_datos_nuevos = cargar_csv(textBox1.Text);
             }
-
 
             //dataGridView1.DataSource = dt_datos_nuevos;
         }
@@ -733,7 +791,7 @@ namespace ActualizaCursos
 
         private void button3_Click(object sender, EventArgs e)
         {
-            textBox3.Text = string.Empty;
+            textBox3.Text = string.Empty;            
 
             if (radioButton1.Checked)
             {
@@ -745,6 +803,7 @@ namespace ActualizaCursos
                     dt_actividades.Rows.Clear();
                     dt_actividades.Columns.Clear();
                     dt_actividades = cargar_csv(textBox3.Text);
+                    //dataGridView2.DataSource = dt_actividades;
                 }
 
             }
@@ -766,10 +825,13 @@ namespace ActualizaCursos
 
         private void button4_Click(object sender, EventArgs e)
         {
+            tot_repetidos = 0;
             procesar();
             tabControl1.SelectedIndex = 2;
             dataGridView2.Focus();
-            MessageBox.Show("El Análisis ha terminado Correctamente", "Analisis Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("El Análisis ha terminado Correctamente\nSe quitaron: "+tot_repetidos+" registros repetidos.", "Analisis Terminado", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            label5.Text = "Repetidos Ignorados: " + tot_repetidos;
         }
 
         private void copiarToolStripMenuItem_Click(object sender, EventArgs e)

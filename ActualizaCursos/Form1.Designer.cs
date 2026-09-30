@@ -35,8 +35,9 @@
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             label1 = new Label();
             button1 = new Button();
             button2 = new Button();
@@ -70,10 +71,12 @@
             toolStripMenuItem3 = new ToolStripMenuItem();
             label2 = new Label();
             tabPage5 = new TabPage();
+            label5 = new Label();
             button6 = new Button();
             button5 = new Button();
             checkBox1 = new CheckBox();
             dataGridView3 = new DataGridView();
+            Column23 = new DataGridViewTextBoxColumn();
             Column1 = new DataGridViewTextBoxColumn();
             Column2 = new DataGridViewTextBoxColumn();
             Column3 = new DataGridViewTextBoxColumn();
@@ -522,6 +525,7 @@
             // 
             // tabPage5
             // 
+            tabPage5.Controls.Add(label5);
             tabPage5.Controls.Add(button6);
             tabPage5.Controls.Add(button5);
             tabPage5.Controls.Add(checkBox1);
@@ -534,6 +538,17 @@
             tabPage5.TabIndex = 1;
             tabPage5.Text = "3.2.- Actividades y Calificaciones";
             tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(180, 252);
+            label5.Name = "label5";
+            label5.Size = new Size(233, 34);
+            label5.TabIndex = 11;
+            label5.Text = "Repetidos Ignorados:";
+            label5.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // button6
             // 
@@ -591,30 +606,38 @@
             dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
             dataGridView3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8, Column9, Column10, Column11, Column12, Column13, Column14, Column15, Column16, Column17, Column18, Column19, Column20, Column21, Column22 });
+            dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column23, Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8, Column9, Column10, Column11, Column12, Column13, Column14, Column15, Column16, Column17, Column18, Column19, Column20, Column21, Column22 });
             dataGridView3.ContextMenuStrip = contextMenuStrip2;
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = SystemColors.Window;
-            dataGridViewCellStyle6.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle6.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = DataGridViewTriState.False;
-            dataGridView3.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle7.BackColor = SystemColors.Window;
+            dataGridViewCellStyle7.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
+            dataGridView3.DefaultCellStyle = dataGridViewCellStyle7;
             dataGridView3.EnableHeadersVisualStyles = false;
             dataGridView3.Location = new Point(6, 34);
             dataGridView3.Name = "dataGridView3";
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle7.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
-            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle8.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle8.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
+            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
             dataGridView3.Size = new Size(726, 212);
             dataGridView3.TabIndex = 6;
             dataGridView3.RowPostPaint += dataGridView3_RowPostPaint;
+            // 
+            // Column23
+            // 
+            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Column23.DefaultCellStyle = dataGridViewCellStyle6;
+            Column23.HeaderText = "#";
+            Column23.Name = "Column23";
+            Column23.Width = 50;
             // 
             // Column1
             // 
@@ -648,8 +671,10 @@
             // 
             // Column7
             // 
+            Column7.AutoSizeMode = DataGridViewAutoSizeColumnMode.ColumnHeader;
             Column7.HeaderText = "Total de Modulos Activos en LMS";
             Column7.Name = "Column7";
+            Column7.Width = 175;
             // 
             // Column8
             // 
@@ -853,6 +878,10 @@
         private RadioButton radioButton2;
         private RadioButton radioButton1;
         private System.Windows.Forms.Timer timer1;
+        private CheckBox checkBox1;
+        private Button button5;
+        private Button button6;
+        private DataGridViewTextBoxColumn Column23;
         private DataGridViewTextBoxColumn Column1;
         private DataGridViewTextBoxColumn Column2;
         private DataGridViewTextBoxColumn Column3;
@@ -875,8 +904,6 @@
         private DataGridViewTextBoxColumn Column20;
         private DataGridViewTextBoxColumn Column21;
         private DataGridViewTextBoxColumn Column22;
-        private CheckBox checkBox1;
-        private Button button5;
-        private Button button6;
+        private Label label5;
     }
 }
