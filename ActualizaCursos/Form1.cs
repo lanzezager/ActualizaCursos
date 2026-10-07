@@ -2,6 +2,8 @@ using ClosedXML.Excel;
 using CsvHelper;
 using CsvHelper.Configuration;
 using DocumentFormat.OpenXml.Bibliography;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas.Parser;
 using System.Data;
 using System.Formats.Asn1;
 using System.Globalization;
@@ -29,25 +31,31 @@ namespace ActualizaCursos
         DataTable dt_calificaciones = new DataTable();
         DataTable dt_actividades = new DataTable();        
 
-        public string seleccionar_archivo(string tipo_arch)
+        public string[] seleccionar_archivo(string tipo_arch)
         {
-            string ruta = "";
+            //string ruta = "";
+            string[] rutas;
+            
+            rutas = new string[1];
 
             OpenFileDialog ofd = new OpenFileDialog();
 
             if (tipo_arch == "csv")
             {
                 ofd.Filter = "Archivos de CSV (*.csv)|*.csv";
+                ofd.Multiselect = false;
             }
 
             if (tipo_arch == "xls")
             {
                 ofd.Filter = "Archivos de Excel (*.xls *.xlsx)|*.xls;*.xlsx";
+                ofd.Multiselect = false;
             }
 
             if (tipo_arch == "pdf")
             {
                 ofd.Filter = "Archivos de Excel (*.pdf)|*.pdf";
+                ofd.Multiselect = true;
             }
 
             ofd.Title = "Seleccionar el archivo";
@@ -55,9 +63,20 @@ namespace ActualizaCursos
 
             if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                ruta = ofd.FileName;
+                if (tipo_arch != "pdf") {
+                    rutas[0] = ofd.FileName;
+                }
+                else
+                {
+                    rutas = new string[ofd.FileNames.Length];
+
+                    for (int i = 0; i < ofd.FileNames.Length; i++)
+                    {
+                        rutas[i] = ofd.FileNames[i];
+                    }
+                }
             }
-            return ruta;
+            return rutas;
         }
 
         public string corrigeTel(string text)
@@ -220,6 +239,234 @@ namespace ActualizaCursos
                     dt.Rows.Add(dataRow);
                 }
             }
+
+            return dt;
+        }
+
+        public string leer_pdf(string archivo)
+        {
+            FileStreamOptions opcionesArchivo = new FileStreamOptions();
+
+            opcionesArchivo.Share = FileShare.ReadWrite;
+            opcionesArchivo.Access = FileAccess.Read;
+            opcionesArchivo.Mode = FileMode.Open;
+
+            FileStream fs = new FileStream(archivo, opcionesArchivo);
+
+            using (PdfReader lector = new PdfReader(fs))
+            {
+                using (PdfDocument pdfDoc = new PdfDocument(lector))
+                {
+                    System.Text.StringBuilder textoTotal = new System.Text.StringBuilder();
+
+                    // Recorrer cada una de las páginas del PDF
+                    for (int i = 1; i <= pdfDoc.GetNumberOfPages(); i++)
+                    {
+                        // Extraer el texto de la página actual
+                        
+                        string textoPagina = PdfTextExtractor.GetTextFromPage(pdfDoc.GetPage(i));
+                        textoTotal.AppendLine(textoPagina);
+                        /*
+                        string[] lineas = textoPagina.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        // Imprimir o procesar cada línea
+                        foreach (string linea in lineas)
+                        {
+                            textBox4.AppendText(linea);
+                        }*/
+                    }
+
+                    return textoTotal.ToString();
+                }
+            }
+        }
+
+
+
+        public DataTable cargar_pdf(string[] archivo)
+        {
+            DataTable dt = new DataTable();
+            DateTime fecha_hoy= DateTime.Now;
+            string texto_bruto = "",linea="", fecha="";
+            int check = 0,it=-1,cal_global=0,tot_cols=0,ical=-1, verif_fecha=0, pos_pri_mes=0, paquete=0;
+            string[] meses = new string[] {"enero","febrero","marzo","abril","mayo","junio",
+                                           "julio","agosto","septiembre","octubre","noviembre","diciembre"};
+
+            for (int i = 0; i < archivo.Length; i++)
+            {
+               texto_bruto+=leer_pdf(archivo[i]);
+            }
+
+            texto_bruto = texto_bruto.ToLower();
+
+            string[] lineas = texto_bruto.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            dt.Columns.Add("Alumno");
+            dt.Columns.Add("Email");
+            dt.Columns.Add("Class_Grade");
+            dt.Columns.Add("Final Exam");
+            dt.Columns.Add("Promedio");
+
+            textBox4.Text = "";
+            it = -1;
+            tot_cols = 0;
+
+            // Imprimir o procesar cada línea
+            //foreach (string linea in lineas)
+            for(int i = 0;i < lineas.Length;i++)
+            {
+                linea=lineas[i];
+
+                //asignar columnas totales
+                if (linea.Contains("due") && tot_cols==0)
+                {
+                    string[] palabras = linea.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    
+                    for(int j = 0; j < palabras.Length; j++)
+                    {
+                        if (palabras[j] == "due")
+                        {
+                            tot_cols++;
+                        }
+                    }
+
+                    for(int j = 0;j < tot_cols; j++)
+                    {
+                        dt.Columns.Add();
+                        dt.Columns.Add();
+                    }
+                }
+
+                
+                //buscar bloque
+                if (linea.Contains('%'))
+                {
+                    if (linea.Substring(linea.IndexOf('%') - 1, 1) != "(") {
+                        check = 1;                        
+                    }
+
+                }
+
+                //crear bloque
+                if (check == 1)
+                {
+                    if (linea.Contains('@'))
+                    {
+                        check = 2;
+                    }
+
+                    if (check != 2) {
+                        textBox4.AppendText(linea + "\n");
+                    }
+                    else
+                    {
+                        textBox4.AppendText(linea);
+                    }
+                }
+
+                //analizar bloque
+                if (check==2)
+                {
+                    if (lineas[i+1].Contains('%')==false)
+                    {
+                        textBox4.Text += lineas[i+1];
+                    }
+
+                    dt.Rows.Add();
+                    it++;
+                    cal_global = 0;
+                    ical = 5;
+
+                    for(int j = 0; j < textBox4.Lines.Count(); j++)
+                    {
+                        string[] palabras = textBox4.Lines[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                        //calificaciones globales
+                        if (palabras[0]== "0.00%")
+                        {
+                            dt.Rows[it][2] = "0.00%";
+                            dt.Rows[it][3] = "--";
+                            dt.Rows[it][4] = "0.00%";
+                            cal_global = 1;
+                        }
+                        else
+                        {
+                            if (cal_global == 0)
+                            {
+                                dt.Rows[it][2] = palabras[0];
+                                dt.Rows[it][3] = palabras[1];
+                                dt.Rows[it][4] = palabras[2];
+                                cal_global = 1;
+                            }
+
+                            //buscar calificaciones
+                            if (textBox4.Lines[j].Contains("/"))
+                            {
+                                for(int k=0; k<palabras.Length; k++)
+                                {
+                                    if (palabras[k].Contains("/"))
+                                    {
+                                        dt.Rows[it][ical]=palabras[k];
+                                        ical++;
+                                    }
+                                }
+                            }
+
+                            //buscar fechas
+                            for(int k=0; k<meses.Length; k++)
+                            {
+                                if (textBox4.Lines[j].Contains(meses[k]))
+                                {
+                                    verif_fecha = 1;
+                                    pos_pri_mes = j;
+                                    break;
+                                }
+                            }
+
+                            //escribir fecha
+                            if (verif_fecha == 1)
+                            {
+
+                                for (int k=(j-1); k<palabras.Length; k++)
+                                {
+                                    if (paquete<3)
+                                    {
+                                        fecha += palabras[k] + " ";
+                                        paquete++;
+                                    }
+
+                                    if (paquete==3)
+                                    {                                        
+                                        fecha=fecha+"00:00";
+
+                                        if (DateTime.TryParse(fecha, out fecha_hoy))
+                                        {
+                                            dt.Rows[it][ical] = fecha_hoy;
+                                        }
+
+                                        fecha = "";
+                                        paquete = 0;
+                                    }
+
+                                    
+                                }
+
+                                verif_fecha=0;
+                            }
+
+                            //buscar nombre
+
+
+
+                        }
+
+
+
+                    
+                    }
+
+                }
+            }     
 
             return dt;
         }
@@ -774,7 +1021,7 @@ namespace ActualizaCursos
         private void button1_Click(object sender, EventArgs e)
         {
             textBox1.Text = string.Empty;
-            textBox1.Text = seleccionar_archivo("csv");
+            textBox1.Text = seleccionar_archivo("csv")[0];
             textBox1.SelectionStart = textBox1.Text.Length;
 
             if (textBox1.Text.Length > 0)
@@ -793,7 +1040,7 @@ namespace ActualizaCursos
 
             if (radioButton1.Checked)
             {
-                textBox2.Text = seleccionar_archivo("xls");
+                textBox2.Text = seleccionar_archivo("xls")[0];
                 textBox2.SelectionStart = textBox2.Text.Length;
 
                 if (textBox2.Text.Length > 0)
@@ -806,7 +1053,7 @@ namespace ActualizaCursos
 
             if (radioButton2.Checked)
             {
-                textBox2.Text = seleccionar_archivo("csv");
+                textBox2.Text = seleccionar_archivo("csv")[0];
                 textBox2.SelectionStart = textBox2.Text.Length;
 
                 if (textBox2.Text.Length > 0)
@@ -824,7 +1071,7 @@ namespace ActualizaCursos
 
             if (radioButton1.Checked)
             {
-                textBox3.Text = seleccionar_archivo("csv");
+                textBox3.Text = seleccionar_archivo("csv")[0];
                 textBox3.SelectionStart = textBox3.Text.Length;
 
                 if (textBox3.Text.Length > 0)
@@ -839,14 +1086,31 @@ namespace ActualizaCursos
 
             if (radioButton2.Checked)
             {
-                textBox3.Text = seleccionar_archivo("pdf");
-                textBox3.SelectionStart = textBox3.Text.Length;
+                string[] rutas;
+                int ulti_diag = 0;
+                rutas = seleccionar_archivo("pdf");
 
+                comboBox2.Items.Clear();
+
+                for (int i = 0; i < rutas.Length; i++)
+                {
+                    ulti_diag = rutas[i].LastIndexOf("\\");
+                    comboBox2.Items.Add(rutas[i].Substring(ulti_diag+1, (rutas[i].Length - (ulti_diag + 1))));
+                }
+
+                if (comboBox2.Items.Count>0)
+                {
+                    textBox3.Text = comboBox2.Items[0].ToString();
+                    comboBox2.SelectedIndex = 0;
+                }
+
+                
                 if (textBox3.Text.Length > 0)
                 {
                     dt_actividades.Rows.Clear();
                     dt_actividades.Columns.Clear();
-                    //dt_actividades = cargar_excel(textBox3.Text);
+                    //dt_actividades = cargar_pdf(rutas);
+                    cargar_pdf(rutas);
                 }
             }
 
@@ -916,6 +1180,8 @@ namespace ActualizaCursos
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
             label6.Text = "Archivo CSV  Reporte de Actividades";
+            comboBox2.Visible = false;
+            textBox3.Visible = true;
             label4.Text = "Archivo XLSX  Reporte de Calificaciones";
             groupBox1.BackColor = System.Drawing.Color.RosyBrown;
         }
@@ -923,6 +1189,8 @@ namespace ActualizaCursos
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
             label6.Text = "Archivo PDF Reporte de Actividades";
+            comboBox2.Visible = true;
+            textBox3.Visible = false;
             label4.Text = "Archivo CSV  Reporte de Calificaciones";
             groupBox1.BackColor = System.Drawing.Color.CadetBlue;
         }

@@ -29,15 +29,15 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle10 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle11 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
             label1 = new Label();
             button1 = new Button();
             button2 = new Button();
@@ -52,11 +52,13 @@
             copiarToolStripMenuItem1 = new ToolStripMenuItem();
             pegarToolStripMenuItem1 = new ToolStripMenuItem();
             tabPage2 = new TabPage();
+            textBox4 = new TextBox();
             textBox1 = new TextBox();
             comboBox1 = new ComboBox();
             numericUpDown1 = new NumericUpDown();
             label11 = new Label();
             groupBox1 = new GroupBox();
+            comboBox2 = new ComboBox();
             radioButton2 = new RadioButton();
             radioButton1 = new RadioButton();
             textBox3 = new TextBox();
@@ -134,7 +136,7 @@
             // button1
             // 
             button1.Font = new Font("Arial", 9.75F, FontStyle.Bold);
-            button1.Location = new Point(417, 35);
+            button1.Location = new Point(456, 39);
             button1.Name = "button1";
             button1.Size = new Size(75, 35);
             button1.TabIndex = 1;
@@ -144,9 +146,10 @@
             // 
             // button2
             // 
+            button2.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button2.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             button2.ForeColor = SystemColors.ControlText;
-            button2.Location = new Point(411, 146);
+            button2.Location = new Point(633, 150);
             button2.Name = "button2";
             button2.Size = new Size(75, 35);
             button2.TabIndex = 4;
@@ -167,9 +170,10 @@
             // 
             // button3
             // 
+            button3.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button3.Font = new Font("Arial", 9.75F, FontStyle.Bold);
             button3.ForeColor = SystemColors.ControlText;
-            button3.Location = new Point(411, 87);
+            button3.Location = new Point(633, 91);
             button3.Name = "button3";
             button3.Size = new Size(75, 32);
             button3.TabIndex = 7;
@@ -198,7 +202,7 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(760, 356);
+            tabControl1.Size = new Size(760, 402);
             tabControl1.TabIndex = 9;
             // 
             // tabPage1
@@ -209,7 +213,7 @@
             tabPage1.Location = new Point(4, 25);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(752, 327);
+            tabPage1.Size = new Size(752, 373);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "1.- Base a Actualizar";
             tabPage1.UseVisualStyleBackColor = true;
@@ -231,28 +235,28 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.MediumSeaGreen;
-            dataGridViewCellStyle1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle9.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle9.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.ContextMenuStrip = contextMenuStrip1;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.Location = new Point(6, 43);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle2.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle10.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle10.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle10.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle10.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle10.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = DataGridViewTriState.True;
+            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
             dataGridView1.Size = new Size(740, 278);
             dataGridView1.TabIndex = 0;
             dataGridView1.RowPostPaint += dataGridView1_RowPostPaint;
@@ -281,6 +285,7 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(textBox4);
             tabPage2.Controls.Add(textBox1);
             tabPage2.Controls.Add(comboBox1);
             tabPage2.Controls.Add(numericUpDown1);
@@ -293,10 +298,21 @@
             tabPage2.Location = new Point(4, 25);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(752, 327);
+            tabPage2.Size = new Size(752, 373);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "2.- Cargar Archivos";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBox4
+            // 
+            textBox4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            textBox4.Location = new Point(36, 277);
+            textBox4.Multiline = true;
+            textBox4.Name = "textBox4";
+            textBox4.ScrollBars = ScrollBars.Both;
+            textBox4.Size = new Size(606, 90);
+            textBox4.TabIndex = 17;
+            textBox4.WordWrap = false;
             // 
             // textBox1
             // 
@@ -306,14 +322,14 @@
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
             textBox1.RightToLeft = RightToLeft.No;
-            textBox1.Size = new Size(384, 22);
+            textBox1.Size = new Size(423, 22);
             textBox1.TabIndex = 16;
             // 
             // comboBox1
             // 
             comboBox1.Anchor = AnchorStyles.Top;
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(598, 160);
+            comboBox1.Location = new Point(314, 343);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(121, 24);
             comboBox1.TabIndex = 15;
@@ -321,10 +337,10 @@
             // 
             // numericUpDown1
             // 
-            numericUpDown1.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            numericUpDown1.Location = new Point(613, 71);
+            numericUpDown1.Font = new Font("Arial", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            numericUpDown1.Location = new Point(674, 41);
             numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(62, 25);
+            numericUpDown1.Size = new Size(62, 29);
             numericUpDown1.TabIndex = 13;
             numericUpDown1.TextAlign = HorizontalAlignment.Center;
             numericUpDown1.Value = new decimal(new int[] { 70, 0, 0, 0 });
@@ -332,7 +348,7 @@
             // label11
             // 
             label11.AutoSize = true;
-            label11.Location = new Point(583, 36);
+            label11.Location = new Point(549, 40);
             label11.Name = "label11";
             label11.Size = new Size(119, 32);
             label11.TabIndex = 12;
@@ -341,7 +357,9 @@
             // 
             // groupBox1
             // 
+            groupBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             groupBox1.BackColor = Color.RosyBrown;
+            groupBox1.Controls.Add(comboBox2);
             groupBox1.Controls.Add(radioButton2);
             groupBox1.Controls.Add(radioButton1);
             groupBox1.Controls.Add(textBox3);
@@ -352,12 +370,21 @@
             groupBox1.Controls.Add(button3);
             groupBox1.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox1.ForeColor = SystemColors.ControlLightLight;
-            groupBox1.Location = new Point(18, 90);
+            groupBox1.Location = new Point(15, 90);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(506, 215);
+            groupBox1.Size = new Size(721, 215);
             groupBox1.TabIndex = 10;
             groupBox1.TabStop = false;
             groupBox1.Text = "Archivos Cursos";
+            // 
+            // comboBox2
+            // 
+            comboBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comboBox2.FormattingEnabled = true;
+            comboBox2.Location = new Point(21, 97);
+            comboBox2.Name = "comboBox2";
+            comboBox2.Size = new Size(606, 26);
+            comboBox2.TabIndex = 21;
             // 
             // radioButton2
             // 
@@ -389,24 +416,26 @@
             // 
             // textBox3
             // 
+            textBox3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox3.BackColor = SystemColors.ControlLightLight;
             textBox3.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             textBox3.Location = new Point(21, 97);
             textBox3.Name = "textBox3";
             textBox3.ReadOnly = true;
             textBox3.RightToLeft = RightToLeft.No;
-            textBox3.Size = new Size(384, 22);
+            textBox3.Size = new Size(606, 22);
             textBox3.TabIndex = 18;
             // 
             // textBox2
             // 
+            textBox2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox2.BackColor = SystemColors.ControlLightLight;
             textBox2.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             textBox2.Location = new Point(21, 159);
             textBox2.Name = "textBox2";
             textBox2.ReadOnly = true;
             textBox2.RightToLeft = RightToLeft.No;
-            textBox2.Size = new Size(384, 22);
+            textBox2.Size = new Size(606, 22);
             textBox2.TabIndex = 17;
             // 
             // button4
@@ -418,7 +447,7 @@
             button4.FlatAppearance.BorderSize = 2;
             button4.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button4.ForeColor = Color.White;
-            button4.Location = new Point(628, 262);
+            button4.Location = new Point(633, 317);
             button4.Name = "button4";
             button4.Size = new Size(103, 43);
             button4.TabIndex = 9;
@@ -431,7 +460,7 @@
             tabPage3.Controls.Add(tabControl2);
             tabPage3.Location = new Point(4, 25);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(752, 327);
+            tabPage3.Size = new Size(752, 373);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "3.- Resultados";
             tabPage3.UseVisualStyleBackColor = true;
@@ -465,27 +494,27 @@
             dataGridView2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView2.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridView2.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = Color.MediumSeaGreen;
-            dataGridViewCellStyle3.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlLightLight;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.ContextMenuStrip = contextMenuStrip2;
             dataGridView2.EnableHeadersVisualStyles = false;
             dataGridView2.Location = new Point(6, 34);
             dataGridView2.Name = "dataGridView2";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle4.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle2.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             dataGridView2.Size = new Size(726, 252);
             dataGridView2.TabIndex = 7;
             dataGridView2.RowPostPaint += dataGridView2_RowPostPaint;
@@ -531,10 +560,10 @@
             tabPage5.Controls.Add(checkBox1);
             tabPage5.Controls.Add(dataGridView3);
             tabPage5.Controls.Add(label3);
-            tabPage5.Location = new Point(4, 25);
+            tabPage5.Location = new Point(4, 24);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(738, 292);
+            tabPage5.Size = new Size(738, 293);
             tabPage5.TabIndex = 1;
             tabPage5.Text = "3.2.- Actividades y Calificaciones";
             tabPage5.UseVisualStyleBackColor = true;
@@ -543,7 +572,7 @@
             // 
             label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(180, 252);
+            label5.Location = new Point(180, 253);
             label5.Name = "label5";
             label5.Size = new Size(233, 34);
             label5.TabIndex = 11;
@@ -556,7 +585,7 @@
             button6.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button6.Image = (Image)resources.GetObject("button6.Image");
             button6.ImageAlign = ContentAlignment.MiddleLeft;
-            button6.Location = new Point(6, 252);
+            button6.Location = new Point(6, 253);
             button6.Name = "button6";
             button6.Size = new Size(98, 34);
             button6.TabIndex = 10;
@@ -570,7 +599,7 @@
             button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button5.Image = (Image)resources.GetObject("button5.Image");
             button5.ImageAlign = ContentAlignment.MiddleLeft;
-            button5.Location = new Point(583, 252);
+            button5.Location = new Point(583, 253);
             button5.Name = "button5";
             button5.Size = new Size(149, 34);
             button5.TabIndex = 8;
@@ -597,44 +626,44 @@
             dataGridView3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView3.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridView3.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle5.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = Color.MediumSeaGreen;
-            dataGridViewCellStyle5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle5.ForeColor = SystemColors.ControlLightLight;
-            dataGridViewCellStyle5.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = DataGridViewTriState.True;
-            dataGridView3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle3.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dataGridView3.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column23, Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8, Column9, Column10, Column11, Column12, Column13, Column14, Column15, Column16, Column17, Column18, Column19, Column20, Column21, Column22 });
             dataGridView3.ContextMenuStrip = contextMenuStrip2;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = SystemColors.Window;
-            dataGridViewCellStyle7.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dataGridView3.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle11.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = SystemColors.Window;
+            dataGridViewCellStyle11.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle11.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle11.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = DataGridViewTriState.False;
+            dataGridView3.DefaultCellStyle = dataGridViewCellStyle11;
             dataGridView3.EnableHeadersVisualStyles = false;
             dataGridView3.Location = new Point(6, 34);
             dataGridView3.Name = "dataGridView3";
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle8.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle8.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
-            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            dataGridView3.Size = new Size(726, 212);
+            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle12.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle12.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle12.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.True;
+            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle12;
+            dataGridView3.Size = new Size(726, 213);
             dataGridView3.TabIndex = 6;
             dataGridView3.RowPostPaint += dataGridView3_RowPostPaint;
             // 
             // Column23
             // 
-            dataGridViewCellStyle6.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            Column23.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            Column23.DefaultCellStyle = dataGridViewCellStyle4;
             Column23.HeaderText = "#";
             Column23.Name = "Column23";
             Column23.Width = 50;
@@ -803,7 +832,7 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 380);
+            ClientSize = new Size(784, 426);
             Controls.Add(menuStrip1);
             Controls.Add(tabControl1);
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -904,5 +933,7 @@
         private DataGridViewTextBoxColumn Column21;
         private DataGridViewTextBoxColumn Column22;
         private Label label5;
+        private TextBox textBox4;
+        private ComboBox comboBox2;
     }
 }
