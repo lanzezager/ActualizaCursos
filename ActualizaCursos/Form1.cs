@@ -281,14 +281,13 @@ namespace ActualizaCursos
             }
         }
 
-
-
         public DataTable cargar_pdf(string[] archivo)
         {
             DataTable dt = new DataTable();
             DateTime fecha_hoy= DateTime.Now;
-            string texto_bruto = "",linea="", fecha="";
-            int check = 0,it=-1,cal_global=0,tot_cols=0,ical=-1, verif_fecha=0, pos_pri_mes=0, paquete=0;
+            string texto_bruto = "",linea="", fecha="", alumno="", alumn_n="", alumn_a="";
+            int check = 0,it=-1,cal_global=0,tot_cols=0,ical=-1, verif_fecha=0, pos_pri_mes=0, 
+                paquete=0, apell=0, fin_nom=0;
             string[] meses = new string[] {"enero","febrero","marzo","abril","mayo","junio",
                                            "julio","agosto","septiembre","octubre","noviembre","diciembre"};
 
@@ -341,8 +340,9 @@ namespace ActualizaCursos
                 //buscar bloque
                 if (linea.Contains('%'))
                 {
+                    //inicio bloque
                     if (linea.Substring(linea.IndexOf('%') - 1, 1) != "(") {
-                        check = 1;                        
+                        check = 1;                      
                     }
 
                 }
@@ -369,102 +369,225 @@ namespace ActualizaCursos
                 {
                     if (lineas[i+1].Contains('%')==false)
                     {
-                        textBox4.Text += lineas[i+1];
+                        if (lineas[i + 1].Contains("final exam")==false) {
+                            textBox4.Text += lineas[i + 1];
+                        }
+                       
                     }
 
-                    dt.Rows.Add();
-                    it++;
-                    cal_global = 0;
-                    ical = 5;
-
-                    for(int j = 0; j < textBox4.Lines.Count(); j++)
+                    if (textBox4.Text.Length>0)
                     {
-                        string[] palabras = textBox4.Lines[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        dt.Rows.Add();
+                        it++;
+                        cal_global = 0;
+                        ical = 5;
 
-                        //calificaciones globales
-                        if (palabras[0]== "0.00%")
+                        for (int j = 0; j < textBox4.Lines.Count(); j++)
                         {
-                            dt.Rows[it][2] = "0.00%";
-                            dt.Rows[it][3] = "--";
-                            dt.Rows[it][4] = "0.00%";
-                            cal_global = 1;
-                        }
-                        else
-                        {
-                            if (cal_global == 0)
+                            string[] palabras = textBox4.Lines[j].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                            //calificaciones globales
+                            if (palabras[0] == "0.00%")
                             {
-                                dt.Rows[it][2] = palabras[0];
-                                dt.Rows[it][3] = palabras[1];
-                                dt.Rows[it][4] = palabras[2];
+                                dt.Rows[it][2] = "0.00%";
+                                dt.Rows[it][3] = "--";
+                                dt.Rows[it][4] = "0.00%";
                                 cal_global = 1;
                             }
-
-                            //buscar calificaciones
-                            if (textBox4.Lines[j].Contains("/"))
+                            else
                             {
-                                for(int k=0; k<palabras.Length; k++)
+                                if (cal_global == 0)
                                 {
-                                    if (palabras[k].Contains("/"))
-                                    {
-                                        dt.Rows[it][ical]=palabras[k];
-                                        ical++;
-                                    }
+                                    dt.Rows[it][2] = palabras[0];
+                                    dt.Rows[it][3] = palabras[1];
+                                    dt.Rows[it][4] = palabras[2];
+                                    cal_global = 1;
                                 }
-                            }
 
-                            //buscar fechas
-                            for(int k=0; k<meses.Length; k++)
-                            {
-                                if (textBox4.Lines[j].Contains(meses[k]))
+                                //buscar calificaciones
+                                if (textBox4.Lines[j].Contains("/"))
                                 {
-                                    verif_fecha = 1;
-                                    pos_pri_mes = j;
-                                    break;
-                                }
-                            }
-
-                            //escribir fecha
-                            if (verif_fecha == 1)
-                            {
-
-                                for (int k=(j-1); k<palabras.Length; k++)
-                                {
-                                    if (paquete<3)
+                                    for (int k = 0; k < palabras.Length; k++)
                                     {
-                                        fecha += palabras[k] + " ";
-                                        paquete++;
-                                    }
-
-                                    if (paquete==3)
-                                    {                                        
-                                        fecha=fecha+"00:00";
-
-                                        if (DateTime.TryParse(fecha, out fecha_hoy))
+                                        if (palabras[k].Contains("/"))
                                         {
-                                            dt.Rows[it][ical] = fecha_hoy;
+                                            dt.Rows[it][ical] = palabras[k];
+                                            ical++;
+                                        }
+                                    }
+                                }
+
+                                //buscar fechas
+                                for (int k = 0; k < meses.Length; k++)
+                                {
+                                    if (textBox4.Lines[j].Contains(meses[k]))
+                                    {
+                                        if ((textBox4.Lines[j].Contains('@')==false) && (textBox4.Lines[j].Contains(',')==false)) {
+                                            verif_fecha = 1;
+                                            pos_pri_mes = j;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                //escribir fecha
+                                if (verif_fecha == 1)
+                                {
+                                    pos_pri_mes = -1;
+
+                                    for (int k = 0; k < palabras.Length; k++)
+                                    {
+                                        for (int l = 0; l < meses.Length; l++)
+                                        {
+                                            if (palabras[k].Contains(meses[l]))
+                                            {
+                                                if (pos_pri_mes==-1) {
+                                                    pos_pri_mes = k; 
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    for (int k = (pos_pri_mes-1); k < palabras.Length; k++)
+                                    {
+                                        if (paquete < 3)
+                                        {
+                                            fecha += palabras[k] + " ";
+                                            paquete++;
+                                         }
+
+                                        if (paquete == 3)
+                                        {
+                                            fecha = fecha + "00:00";
+
+                                            if (DateTime.TryParse(fecha, out fecha_hoy))
+                                            {
+                                                for (int l = 0; l < tot_cols; l++) {
+
+                                                    if (dt.Rows[it][(ical - tot_cols)].ToString().Contains("--"))
+                                                    {
+                                                        ical++;
+                                                    }
+                                                    else
+                                                    {
+                                                        break;
+                                                    }
+                                                }
+
+                                                dt.Rows[it][ical] = fecha_hoy;
+                                            }
+
+                                            fecha = "";
+                                            paquete = 0;
+                                            ical++;
+                                        }
+                                        
+
+                                    }
+
+                                    verif_fecha = 0;
+                                }
+
+                                //buscar nombre
+                                if (textBox4.Lines[j].Contains(','))
+                                {
+                                    alumno = "";
+                                    alumn_n = "";
+                                    alumn_a = "";
+
+                                    if (textBox4.Lines[j].Contains('/'))
+                                    {
+                                        apell = 1;
+                                        fin_nom = 0;
+
+                                        for (int k = 0; k < palabras.Length; k++)
+                                        {
+                                            if (palabras[k].Contains('/'))
+                                            {
+                                                fin_nom = 1;
+                                            }
+
+                                            if (fin_nom == 0) {
+
+                                                if (apell == 1)
+                                                {
+                                                    alumn_a += palabras[k] + " ";
+                                                }
+                                                else
+                                                {
+                                                    alumn_n += palabras[k] + " ";
+                                                }
+
+                                                if (palabras[k].Contains(","))
+                                                {
+                                                    apell = 0;
+                                                }
+
+                                            }
+
+                                        }
+                                        alumn_a = alumn_a.Substring(0, alumn_a.Length - 1);
+                                        alumno = alumn_n + alumn_a.Substring(0, alumn_a.Length - 1);
+                                        dt.Rows[it][0] = alumno;
+                                    }
+                                    else
+                                    {
+                                        apell = 1;
+                                        fin_nom = 0;
+
+                                        for (int k = 0; k < palabras.Length; k++)
+                                        {
+                                            if (fin_nom == 0)
+                                            {
+                                                if (apell == 1)
+                                                {
+                                                    alumn_a += palabras[k] + " ";
+                                                }
+                                                else
+                                                {
+                                                    alumn_n += palabras[k] + " ";
+                                                }
+
+                                                if (palabras[k].Contains(','))
+                                                {
+                                                    apell = 0;
+                                                }
+
+                                            }
+
+                                            if (palabras[k].Contains(''))
+                                            {
+                                                fin_nom = 1;
+                                            }
                                         }
 
-                                        fecha = "";
-                                        paquete = 0;
-                                    }
+                                        while (alumn_n.Contains(''))
+                                        {
+                                            alumn_n = alumn_n.Substring(0, alumn_n.Length - 1);
+                                        }
 
-                                    
+                                        alumn_a = alumn_a.Substring(0, alumn_a.Length - 1);
+
+                                        alumno = alumn_n + alumn_a.Substring(0, alumn_a.Length - 1);
+                                        dt.Rows[it][0] = alumno;
+
+                                    }
                                 }
 
-                                verif_fecha=0;
+
+                                //buscar correo
+
+                                if (textBox4.Lines[j].Contains('@'))
+                                {
+                                    dt.Rows[it][1] = textBox4.Lines[j];
+                                }
                             }
-
-                            //buscar nombre
-
-
-
                         }
 
-
-
-                    
                     }
 
+                    textBox4.Text = "";
+                    check = 0;
                 }
             }     
 
@@ -1110,7 +1233,7 @@ namespace ActualizaCursos
                     dt_actividades.Rows.Clear();
                     dt_actividades.Columns.Clear();
                     //dt_actividades = cargar_pdf(rutas);
-                    cargar_pdf(rutas);
+                    dataGridView2.DataSource= cargar_pdf(rutas);
                 }
             }
 
