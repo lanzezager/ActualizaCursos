@@ -257,7 +257,7 @@
             dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
             dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Size = new Size(740, 278);
+            dataGridView1.Size = new Size(740, 324);
             dataGridView1.TabIndex = 0;
             dataGridView1.RowPostPaint += dataGridView1_RowPostPaint;
             // 
@@ -475,7 +475,7 @@
             tabControl2.Location = new Point(3, 3);
             tabControl2.Name = "tabControl2";
             tabControl2.SelectedIndex = 0;
-            tabControl2.Size = new Size(746, 321);
+            tabControl2.Size = new Size(746, 367);
             tabControl2.TabIndex = 0;
             // 
             // tabPage4
@@ -485,7 +485,7 @@
             tabPage4.Location = new Point(4, 25);
             tabPage4.Name = "tabPage4";
             tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(738, 292);
+            tabPage4.Size = new Size(738, 338);
             tabPage4.TabIndex = 0;
             tabPage4.Text = "3.1 .- Nuevos Inscritos ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -517,7 +517,7 @@
             dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
             dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            dataGridView2.Size = new Size(726, 252);
+            dataGridView2.Size = new Size(726, 298);
             dataGridView2.TabIndex = 7;
             dataGridView2.RowPostPaint += dataGridView2_RowPostPaint;
             // 
@@ -565,7 +565,7 @@
             tabPage5.Location = new Point(4, 24);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(738, 293);
+            tabPage5.Size = new Size(738, 339);
             tabPage5.TabIndex = 1;
             tabPage5.Text = "3.2.- Actividades y Calificaciones";
             tabPage5.UseVisualStyleBackColor = true;
@@ -574,7 +574,7 @@
             // 
             label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(180, 253);
+            label5.Location = new Point(180, 299);
             label5.Name = "label5";
             label5.Size = new Size(233, 34);
             label5.TabIndex = 11;
@@ -587,7 +587,7 @@
             button6.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button6.Image = (Image)resources.GetObject("button6.Image");
             button6.ImageAlign = ContentAlignment.MiddleLeft;
-            button6.Location = new Point(6, 253);
+            button6.Location = new Point(6, 299);
             button6.Name = "button6";
             button6.Size = new Size(98, 34);
             button6.TabIndex = 10;
@@ -601,7 +601,7 @@
             button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button5.Image = (Image)resources.GetObject("button5.Image");
             button5.ImageAlign = ContentAlignment.MiddleLeft;
-            button5.Location = new Point(583, 253);
+            button5.Location = new Point(583, 299);
             button5.Name = "button5";
             button5.Size = new Size(149, 34);
             button5.TabIndex = 8;
@@ -658,7 +658,7 @@
             dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
             dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            dataGridView3.Size = new Size(726, 213);
+            dataGridView3.Size = new Size(726, 259);
             dataGridView3.TabIndex = 6;
             dataGridView3.RowPostPaint += dataGridView3_RowPostPaint;
             // 
