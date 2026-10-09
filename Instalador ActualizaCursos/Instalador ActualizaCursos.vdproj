@@ -21,7 +21,7 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_A9B77E92B9A14EB49DC237E235A44F2D"
+        "MsmKey" = "8:_D9FE3838FED044EFAEF449643D1FED9D"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -82,6 +82,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -114,10 +122,10 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A9B77E92B9A14EB49DC237E235A44F2D"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D9FE3838FED044EFAEF449643D1FED9D"
             {
-            "SourcePath" = "8:..\\..\\..\\ActualizaCursos.ico"
-            "TargetName" = "8:ActualizaCursos.ico"
+            "SourcePath" = "8:..\\ActualizaCursos\\Resources\\a_c.ico"
+            "TargetName" = "8:a_c.ico"
             "Tag" = "8:"
             "Folder" = "8:_EDD33DD337F747F8A09E8F17CB3DC78A"
             "Condition" = "8:"
@@ -190,15 +198,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ActualizaCursos"
-        "ProductCode" = "8:{BE7D3DED-9749-4C52-A190-35ED9CEA7A03}"
-        "PackageCode" = "8:{7FF39698-48FC-4235-B04E-4487FDF51F3F}"
+        "ProductCode" = "8:{02910CA1-D0A5-49B0-AA80-EA09605CE6AC}"
+        "PackageCode" = "8:{23F7F184-7421-4C4B-B772-E880CB8F915B}"
         "UpgradeCode" = "8:{E9124328-2DC2-44F7-9B82-401B2F964C25}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.4"
+        "ProductVersion" = "8:0.5"
         "Manufacturer" = "8:LanzeZager"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -313,7 +321,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_36E72D3A8CB64ADE8D0FD5A9673332E5"
             {
-            "Name" = "8:ActualizaCursos 0.4"
+            "Name" = "8:ActualizaCursos 0.5"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -322,12 +330,12 @@
             "Target" = "8:_342D01E56269473EAA2A9E7D9D0C6FC0"
             "Folder" = "8:_6775795205CE409DB905BD2D3B179146"
             "WorkingFolder" = "8:_EDD33DD337F747F8A09E8F17CB3DC78A"
-            "Icon" = "8:_A9B77E92B9A14EB49DC237E235A44F2D"
+            "Icon" = "8:_D9FE3838FED044EFAEF449643D1FED9D"
             "Feature" = "8:"
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A80E405F8D8B46EAB44A058AFE2AD5EC"
             {
-            "Name" = "8:ActualizaCursos 0.4"
+            "Name" = "8:ActualizaCursos 0.5"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -336,7 +344,7 @@
             "Target" = "8:_342D01E56269473EAA2A9E7D9D0C6FC0"
             "Folder" = "8:_B85D821B3E9D4419B522BC8C085DCB96"
             "WorkingFolder" = "8:_EDD33DD337F747F8A09E8F17CB3DC78A"
-            "Icon" = "8:_A9B77E92B9A14EB49DC237E235A44F2D"
+            "Icon" = "8:_D9FE3838FED044EFAEF449643D1FED9D"
             "Feature" = "8:"
             }
         }

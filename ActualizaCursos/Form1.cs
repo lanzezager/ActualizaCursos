@@ -971,12 +971,83 @@ namespace ActualizaCursos
 
         }
 
-        public void actividades()
+        public int[] busca_fechas_plai(string email, int indice_email)
         {
-            string email = "", formato_fecha = "dd/MM/yyyy HH:mm";
-            int coincidencia = 0,repetido=0, col_cont=1,indice=-1;
+            string formato_fecha = "dd/MM/yyyy HH:mm";
             int[] asistencia = new int[12];
             DateTime fecha_posible = DateTime.Now;
+
+            for (int z = 0; z < asistencia.Length; z++)
+            {
+                asistencia[z] = 0;
+            }
+
+            for (int j = 0; j < dt_actividades.Rows.Count; j++)
+            {
+                if (email == dt_actividades.Rows[j][indice_email].ToString())
+                {
+                    for (int k = 0; k < dt_actividades.Columns.Count; k++)
+                    {
+                        if (DateTime.TryParse(dt_actividades.Rows[j][k].ToString(), out fecha_posible))
+                        {
+                            //fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
+                            //if (DateTime.TryParseExact(dt_actividades.Rows[j][k].ToString(),formato_fecha, CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha_posible_exacta)) {
+
+                            if (fecha_posible.Year != 1969)
+                            {
+                                asistencia[fecha_posible.Month - 1] = 1;
+                            }
+                            //}
+                        }
+                    }
+                }
+            }
+
+            return asistencia;
+        }
+
+        public int[] busca_fechas_netacad(string email, int indice_email)
+        {
+            string formato_fecha = "dd/MM/yyyy HH:mm";
+            int[] asistencia = new int[12];
+            DateTime fecha_posible = DateTime.Now;
+
+            for (int z = 0; z < asistencia.Length; z++)
+            {
+                asistencia[z] = 0;
+            }
+
+            for (int j = 0; j < dt_actividades.Rows.Count; j++)
+            {
+                if (email == dt_actividades.Rows[j][indice_email].ToString())
+                {
+                    for (int k = 0; k < dt_actividades.Columns.Count; k++)
+                    {
+                        if (DateTime.TryParse(dt_actividades.Rows[j][k].ToString(), out fecha_posible))
+                        {
+                            //fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
+                            //if (DateTime.TryParseExact(dt_actividades.Rows[j][k].ToString(),formato_fecha, CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha_posible_exacta)) {
+
+                            if (fecha_posible.Year != 1969)
+                            {
+                                asistencia[fecha_posible.Month - 1] = 1;
+                            }
+                            //}
+
+                        }
+                    }
+                }
+            }
+
+            return asistencia;
+        }
+
+        public void actividades()
+        {
+            string email = "";
+            int repetido=0, col_cont=1,indice=-1;
+            int[] asistencia = new int[12];
+            
             Decimal calificacion = 0, min_apro = 0;
 
             if (Decimal.TryParse(numericUpDown1.Value.ToString(), out min_apro))
@@ -987,40 +1058,18 @@ namespace ActualizaCursos
             for (int i = 0; i < dt_datos_base.Rows.Count; i++)
             {
                 email = dt_datos_base.Rows[i][0].ToString();
-                coincidencia = 0;
-                indice = -1;
-
-                for (int z = 0; z < asistencia.Length; z++)
+                indice = -1;                
+                              
+                if (radioButton1.Checked)
                 {
-                    asistencia[z] = 0;
+                    asistencia = busca_fechas_plai(email,1);
                 }
 
-                for (int j = 0; j < dt_actividades.Rows.Count; j++)
+                if (radioButton2.Checked)
                 {
-                    if (email == dt_actividades.Rows[j][1].ToString())
-                    {
-                        coincidencia = 1;
-
-                        for (int k = 0; k < dt_actividades.Columns.Count; k++)
-                        {
-                            if (DateTime.TryParse(dt_actividades.Rows[j][k].ToString(), out fecha_posible))
-                            {
-                                //fecha_posible = DateTime.ParseExact(dt_actividades.Rows[j][k].ToString(), formato_fecha, CultureInfo.InvariantCulture);
-
-                                //if (DateTime.TryParseExact(dt_actividades.Rows[j][k].ToString(),formato_fecha, CultureInfo.InvariantCulture,DateTimeStyles.None, out fecha_posible_exacta)) {
-
-                                if (fecha_posible.Year != 1969)
-                                {
-                                    asistencia[fecha_posible.Month - 1] = 1;
-                                }
-                                //}
-
-
-                            }
-                        }
-                    }
+                    asistencia = busca_fechas_netacad(email,1);
                 }
-
+                 
                 for (int l = 0; l < dt_datos_nuevos.Rows.Count; l++)
                 {
                     if (email == dt_datos_nuevos.Rows[l][5].ToString())
@@ -1232,8 +1281,8 @@ namespace ActualizaCursos
                 {
                     dt_actividades.Rows.Clear();
                     dt_actividades.Columns.Clear();
-                    //dt_actividades = cargar_pdf(rutas);
-                    dataGridView2.DataSource= cargar_pdf(rutas);
+                    dt_actividades = cargar_pdf(rutas);
+                    //dataGridView2.DataSource= cargar_pdf(rutas);
                 }
             }
 
