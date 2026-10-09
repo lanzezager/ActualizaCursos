@@ -562,10 +562,10 @@
             tabPage5.Controls.Add(checkBox1);
             tabPage5.Controls.Add(dataGridView3);
             tabPage5.Controls.Add(label3);
-            tabPage5.Location = new Point(4, 24);
+            tabPage5.Location = new Point(4, 25);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(738, 339);
+            tabPage5.Size = new Size(738, 338);
             tabPage5.TabIndex = 1;
             tabPage5.Text = "3.2.- Actividades y Calificaciones";
             tabPage5.UseVisualStyleBackColor = true;
@@ -574,7 +574,7 @@
             // 
             label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(180, 299);
+            label5.Location = new Point(180, 298);
             label5.Name = "label5";
             label5.Size = new Size(233, 34);
             label5.TabIndex = 11;
@@ -587,7 +587,7 @@
             button6.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button6.Image = (Image)resources.GetObject("button6.Image");
             button6.ImageAlign = ContentAlignment.MiddleLeft;
-            button6.Location = new Point(6, 299);
+            button6.Location = new Point(6, 298);
             button6.Name = "button6";
             button6.Size = new Size(98, 34);
             button6.TabIndex = 10;
@@ -601,7 +601,7 @@
             button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             button5.Image = (Image)resources.GetObject("button5.Image");
             button5.ImageAlign = ContentAlignment.MiddleLeft;
-            button5.Location = new Point(583, 299);
+            button5.Location = new Point(583, 298);
             button5.Name = "button5";
             button5.Size = new Size(149, 34);
             button5.TabIndex = 8;
@@ -658,7 +658,7 @@
             dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
             dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
             dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            dataGridView3.Size = new Size(726, 259);
+            dataGridView3.Size = new Size(726, 258);
             dataGridView3.TabIndex = 6;
             dataGridView3.RowPostPaint += dataGridView3_RowPostPaint;
             // 

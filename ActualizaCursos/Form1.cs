@@ -1264,25 +1264,27 @@ namespace ActualizaCursos
 
                 comboBox2.Items.Clear();
 
-                for (int i = 0; i < rutas.Length; i++)
-                {
-                    ulti_diag = rutas[i].LastIndexOf("\\");
-                    comboBox2.Items.Add(rutas[i].Substring(ulti_diag+1, (rutas[i].Length - (ulti_diag + 1))));
-                }
+                if (rutas[0] != null) {
+                    for (int i = 0; i < rutas.Length; i++)
+                    {
+                        ulti_diag = rutas[i].LastIndexOf("\\");
+                        comboBox2.Items.Add(rutas[i].Substring(ulti_diag + 1, (rutas[i].Length - (ulti_diag + 1))));
+                    }
 
-                if (comboBox2.Items.Count>0)
-                {
-                    textBox3.Text = comboBox2.Items[0].ToString();
-                    comboBox2.SelectedIndex = 0;
-                }
+                    if (comboBox2.Items.Count > 0)
+                    {
+                        textBox3.Text = comboBox2.Items[0].ToString();
+                        comboBox2.SelectedIndex = 0;
+                    }
 
-                
-                if (textBox3.Text.Length > 0)
-                {
-                    dt_actividades.Rows.Clear();
-                    dt_actividades.Columns.Clear();
-                    dt_actividades = cargar_pdf(rutas);
-                    //dataGridView2.DataSource= cargar_pdf(rutas);
+
+                    if (textBox3.Text.Length > 0)
+                    {
+                        dt_actividades.Rows.Clear();
+                        dt_actividades.Columns.Clear();
+                        dt_actividades = cargar_pdf(rutas);
+                        //dataGridView2.DataSource= cargar_pdf(rutas);
+                    }
                 }
             }
 
@@ -1469,6 +1471,18 @@ namespace ActualizaCursos
                 dataGridView3.Columns[2].Frozen = true;
                 dataGridView3.Columns[3].Frozen = true;
                 dataGridView3.Columns[4].Frozen = true;
+                dataGridView3.Columns[5].Frozen = true;
+
+                for (int i=0; i< dataGridView3.Rows.Count; i++)
+                {
+                    dataGridView3[0, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                    dataGridView3[1, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                    dataGridView3[2, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                    dataGridView3[3, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                    dataGridView3[4, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                    dataGridView3[5, i].Style.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+                }
+
 
             }
             else
@@ -1478,6 +1492,17 @@ namespace ActualizaCursos
                 dataGridView3.Columns[2].Frozen = false;
                 dataGridView3.Columns[3].Frozen = false;
                 dataGridView3.Columns[4].Frozen = false;
+                dataGridView3.Columns[5].Frozen = false;
+
+                for (int i = dataGridView3.Rows.Count-1; i >-1 ; i--)
+                {
+                    dataGridView3[0, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                    dataGridView3[1, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                    dataGridView3[2, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                    dataGridView3[3, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                    dataGridView3[4, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                    dataGridView3[5, i].Style.BackColor = System.Drawing.SystemColors.Window;
+                }
             }
         }
 
