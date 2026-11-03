@@ -4,6 +4,11 @@ using CsvHelper.Configuration;
 using DocumentFormat.OpenXml.Bibliography;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Parser;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UglyToad.PdfPig;
+using UglyToad.PdfPig.Content;
 using System.Data;
 using System.Formats.Asn1;
 using System.Globalization;
@@ -255,7 +260,7 @@ namespace ActualizaCursos
 
             using (PdfReader lector = new PdfReader(fs))
             {
-                using (PdfDocument pdfDoc = new PdfDocument(lector))
+                using (iText.Kernel.Pdf.PdfDocument pdfDoc = new iText.Kernel.Pdf.PdfDocument(lector))
                 {
                     System.Text.StringBuilder textoTotal = new System.Text.StringBuilder();
 
@@ -281,13 +286,465 @@ namespace ActualizaCursos
             }
         }
 
+        public String leer_pdf2(string archivo)
+        {
+            DataTable dt = new DataTable();
+            String textoTotal = "";
+
+            FileStreamOptions opcionesArchivo = new FileStreamOptions();
+
+            opcionesArchivo.Share = FileShare.ReadWrite;
+            opcionesArchivo.Access = FileAccess.Read;
+            opcionesArchivo.Mode = FileMode.Open;
+
+            FileStream fs = new FileStream(archivo, opcionesArchivo);
+
+            using (UglyToad.PdfPig.PdfDocument document = UglyToad.PdfPig.PdfDocument.Open(fs))
+            {
+                foreach (Page page in document.GetPages())
+                {
+                    Console.WriteLine($"--- PROCESANDO PÁGINA {page.Number} ---");
+
+                    // 1. Obtener todas las palabras con sus posiciones geográficas
+                    var palabras = page.GetWords().ToList();
+
+                    // 2. Agrupar palabras en "líneas físicas" agrupando por una tolerancia en el eje Y (VERTICAL)
+                    // Las tablas suelen tener variaciones muy pequeñas en Y para una misma fila
+                    var palabrasAgrupadasPorY = AgruparPorY(palabras, toleranciaY: 8);
+
+                    
+                    foreach (var filaPalabras in palabrasAgrupadasPorY)
+                    {
+                        /*
+                        // Construir el texto completo de la línea horizontal
+                        string textoLinea = string.Join(" ", filaPalabras.OrderBy(w => w.BoundingBox.Left).Select(w => w.Text));
+
+                        // Filtrar encabezados o líneas vacías (saltarse filas que no tengan correos o estados)
+                        if (!textoLinea.Contains("@") && !textoLinea.Contains("IN PROGRESS") && !textoLinea.Contains("COMPLETED"))
+                            continue;
+
+                        // 3. Separar por columnas usando rangos aproximados del eje X (X-Coordinates)
+                        // Ajusta estos valores si notas que los datos se cruzan de columna
+                        var colEstudiante = filaPalabras.Where(w => w.BoundingBox.Left < 250).OrderBy(w => w.BoundingBox.Left);
+                        var colCalificaciones = filaPalabras.Where(w => w.BoundingBox.Left >= 250).OrderBy(w => w.BoundingBox.Left);
+
+                        string datosAlumno = string.Join(" ", colEstudiante.Select(w => w.Text));
+                        string datosNotas = string.Join(" ", colCalificaciones.Select(w => w.Text));
+
+                        // Limpieza básica para separar Nombre de Email en la columna del Alumno
+                        string estado = datosAlumno.Contains("IN PROGRESS") ? "IN PROGRESS" : "COMPLETED";
+                        string[] partesAlumno = datosAlumno.Split(new string[] { estado }, StringSplitOptions.None);
+
+                        string nombre = partesAlumno[0].Trim();
+                        string email = partesAlumno.Length > 1 ? partesAlumno[1].Trim() : "";
+
+                        // Mostrar los resultados limpios en consola
+                        Console.WriteLine($"Alumno: {nombre}");
+                        Console.WriteLine($"Estado: {estado}");
+                        Console.WriteLine($"Email:  {email}");
+                        Console.WriteLine($"Notas:  {datosNotas}");
+                        Console.WriteLine(new string('-', 50));
+                        */
+                        for (int i=0; i<filaPalabras.Count;i++)
+                        {
+                            textoTotal += filaPalabras[i].ToString() + ",";
+                        }
+
+                        textoTotal = textoTotal + "\n";
+
+                    }
+                }
+            }
+
+            return textoTotal;
+        }
+
+        public static List<List<Word>> AgruparPorY(List<Word> palabras, double toleranciaY)
+        {
+            var resultado = new List<List<Word>>();
+            var palabrasOrdenadasY = palabras.OrderByDescending(w => w.BoundingBox.Bottom).ToList();
+
+            while (palabrasOrdenadasY.Count > 0)
+            {
+                var pivote = palabrasOrdenadasY[0];
+                // Busca todas las palabras que estén a una altura similar a la del pivote
+                var fila = palabrasOrdenadasY
+                    .Where(w => Math.Abs(w.BoundingBox.Bottom - pivote.BoundingBox.Bottom) <= toleranciaY)
+                    .ToList();
+
+                resultado.Add(fila);
+
+                // Remover las palabras ya agrupadas para continuar con el bucle
+                foreach (var p in fila)
+                {
+                    palabrasOrdenadasY.Remove(p);
+                }
+            }
+
+            return resultado;
+        }
+
+        public Object[] decodificar_bloque_v2(string bloque, int tot_cols)
+        {
+            Object[] fila = new object[5 + (tot_cols * 2)];
+
+            int ical = 0,fechas=0,pri_mes=-1,pri_mail=0;
+            string fecha = "",mail="", nombre="";
+            DateTime fecha_hoy = DateTime.Now;
+            string[] meses = new string[] {"enero","febrero","marzo","abril","mayo","junio",
+                                           "julio","agosto","septiembre","octubre","noviembre","diciembre"};
+
+            string[] lineas = bloque.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for(int i=0; i< lineas.Length; i++)
+            {
+                string[] palabras = lineas[i].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                //calificaciones totales
+                if (i == 0)//primer renglón
+                {
+                    if (palabras[0] == "0.00%")
+                    {
+                        fila[2] = "0.00%";
+                        fila[3] = "--";
+                        fila[4] = "--";
+                    }
+                    else
+                    {                        
+                        fila[2] = palabras[0];
+                        fila[3] = palabras[1];
+                        fila[4] = palabras[2];
+                    }
+
+                    for(int j=0; j<palabras.Length; j++)
+                    {
+                        if (palabras[j].Contains('/'))
+                        {
+                            fila[5 + ical] = palabras[j];
+                            ical++;
+                        }
+                    }
+
+                    //nombre
+                    for (int j = palabras.Length-1; j >-1 ; j--)
+                    {
+                        if (palabras[j].Contains('/'))
+                        {
+                            break;
+                        }
+                        
+                        if (palabras[j].Contains(''))
+                        {
+
+                        }
+                        else
+                        {
+                            nombre =  palabras[j]+" "+nombre;
+                        }   
+                       
+                    }
+
+                    fila[0] = nombre;
+                }
+                else
+                {
+
+                    //fechas
+                    ical = 0;
+
+                    for(int j=0; j < meses.Length; j++)
+                    {
+                        if (lineas[i].Contains(meses[j]))
+                        {
+                            fechas = 1;
+                        }
+                    }
+
+                    if (fechas == 1)
+                    {
+                        for (int j = 0; j < palabras.Length; j++)
+                        {
+                            for (int k = 0; k < meses.Length; k++)
+                            {
+                                if (palabras[j].Contains(meses[k]))
+                                {
+                                    pri_mes = j;
+                                    break;
+                                }
+                            }
+
+                            if (pri_mes > -1)
+                            {
+                                break;
+                            }
+                        }
+
+                        int pm = pri_mes - 1;
+
+                        if ((pm + 2) < palabras.Length) {
+
+                            if (palabras[pm + 2] == fecha_hoy.Year.ToString())
+                            {
+                                while ((pm+2) < palabras.Length)
+                                {
+                                    fecha = palabras[pm] + " " + palabras[pm + 1] + " " + palabras[pm + 2] + " 00:00";
+
+                                    if (DateTime.TryParse(fecha, out fecha_hoy))
+                                    {
+                                        for (int l = (5+ical); l < fila.Length; l++)
+                                        {
+                                            if (fila[l].ToString().Contains("--/"))
+                                            {
+                                                ical++;
+                                            }
+                                            else
+                                            {
+
+                                                break;
+                                            }
+                                        }
+
+                                        if ((5 + ical + tot_cols) >= fila.Length)
+                                        {
+                                            fila[fila.Length-1] = fecha_hoy;
+                                            ical++;
+                                        }
+                                        else
+                                        {
+                                            fila[5 + ical + tot_cols] = fecha_hoy;
+                                            ical++;
+                                        }
+                                        
+                                    }
+
+                                    pm = pm + 3;
+                                }
+                            }
+                            else
+                            {
+                                while ((pm+1) < palabras.Length)
+                                {
+                                    fecha = palabras[pm] + " " + palabras[pm + 1] + " " + fecha_hoy.Year.ToString() + " 00:00";
+
+                                    if (DateTime.TryParse(fecha, out fecha_hoy))
+                                    {
+                                        for (int l = (5 + ical); l < fila.Length; l++)
+                                        {
+                                            if (fila[l].ToString().Contains("--/"))
+                                            {
+                                                ical++;
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+
+                                        if ((5 + ical + tot_cols) >= fila.Length)
+                                        {
+                                            fila[fila.Length - 1] = fecha_hoy;
+                                            ical++;
+                                        }
+                                        else
+                                        {
+                                            fila[5 + ical + tot_cols] = fecha_hoy;
+                                            ical++;
+                                        }
+                                    }
+
+                                    pm = pm + 2;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (palabras.Length>1) { 
+                                while (pm < palabras.Length)
+                                {
+                                    fecha = palabras[pm] + " " + palabras[pm + 1] + " " + fecha_hoy.Year.ToString() + " 00:00";
+
+                                    if (DateTime.TryParse(fecha, out fecha_hoy))
+                                    {
+                                        for (int l = (5 + ical); l < fila.Length; l++)
+                                        {
+                                            if (fila[l].ToString().Contains("--/"))
+                                            {
+                                                ical++;
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+
+                                        if ((5 + ical + tot_cols) >= fila.Length)
+                                        {
+                                            fila[fila.Length - 1] = fecha_hoy;
+                                            ical++;
+                                        }
+                                        else
+                                        {
+                                            fila[5 + ical + tot_cols] = fecha_hoy;
+                                            ical++;
+                                        }
+                                    }
+
+                                    pm = pm + 2;
+                                }
+
+                            }
+                        }
+                        fechas = 0;
+                    } 
+                }
+            }
+
+
+
+            for (int i = lineas.Length-1; i >-1; i--)
+            {
+                string[] palabras = lineas[i].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                if (lineas[i].Contains('@'))
+                {
+                    for (int j = palabras.Length - 1; j > -1; j--)
+                    {
+                        if (palabras[j].Contains('@'))
+                        {
+                            mail = palabras[j] + mail;
+                            pri_mail = 1;
+
+                        }
+                    }
+                }
+                else
+                {
+                    for (int j = palabras.Length-1; j>-1  ; j--)
+                    {
+                        if (palabras[j].Contains(fecha_hoy.Year.ToString()))
+                        {
+
+                        }
+                        else
+                        {
+                            if (pri_mail==0)
+                            {
+                                mail += palabras[j];
+                            }                            
+                        }
+                    }
+                }
+            }
+
+            fila[1] = mail;
+
+            return fila;
+        }
+
+        public DataTable cargar_pdf_v2(string[] archivo)
+        {
+            DataTable dt = new DataTable();
+            
+            string texto_bruto = "", linea = "", fecha = "", alumno = "", alumn_n = "", alumn_a = "",bloque="";
+            int check = 0, it = -1, cal_global = 0, tot_cols = 0, ical = -1, verif_fecha = 0, pos_pri_mes = 0,
+                paquete = 0, apell = 0, fin_nom = 0, capt_tot_cols = 0, capt_bloq=0;
+            
+
+            for (int i = 0; i < archivo.Length; i++)
+            {
+                texto_bruto += leer_pdf2(archivo[i]);
+            }
+
+            texto_bruto = texto_bruto.ToLower();
+
+            string[] lineas = texto_bruto.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+
+            dt.Columns.Add("Alumno");
+            dt.Columns.Add("Email");
+            dt.Columns.Add("Class_Grade");
+            dt.Columns.Add("Final Exam");
+            dt.Columns.Add("Promedio");
+
+            it = -1;
+            tot_cols = 0;
+            capt_tot_cols = 0;
+
+
+            //obtener tot_cols
+            for (int i = 0; i < lineas.Length; i++)
+            {
+                //asignar columnas totales
+                if (lineas[i].Contains("due"))
+                {
+                    string[] palabras = lineas[i].Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    for (int j = 0; j < palabras.Length; j++)
+                    {
+                        if (palabras[j] == "due")
+                        {
+                            tot_cols++;
+                        }
+                    }
+                }
+
+                if (lineas[i].Contains("%,"))
+                {
+                    break;
+                }
+
+            }
+
+            
+            for (int j = 0; j < tot_cols; j++)
+            {
+                dt.Columns.Add();
+                dt.Columns.Add();
+            }            
+
+            // Imprimir o procesar cada línea
+            //foreach (string linea in lineas)
+            for (int i = 0; i < lineas.Length; i++)
+            {
+                linea = lineas[i];                
+
+                //buscar bloque
+                if (linea.Contains("%,"))
+                {
+                    //analizar bloque
+                    if (bloque.Length>0)
+                    {
+                        dt.Rows.Add(decodificar_bloque_v2(bloque,tot_cols));
+                        bloque = "";
+                    }
+
+                    //generar bloque
+                    capt_bloq = 1;
+                }
+
+                if (linea.Contains("evaluación"))
+                {
+                    capt_bloq = 0;
+                }
+
+
+                if (capt_bloq==1)
+                {
+                    bloque += linea + "\n";
+                }
+
+
+            }
+
+            return dt;
+        }
+
         public DataTable cargar_pdf(string[] archivo)
         {
             DataTable dt = new DataTable();
             DateTime fecha_hoy= DateTime.Now;
             string texto_bruto = "",linea="", fecha="", alumno="", alumn_n="", alumn_a="";
             int check = 0,it=-1,cal_global=0,tot_cols=0,ical=-1, verif_fecha=0, pos_pri_mes=0, 
-                paquete=0, apell=0, fin_nom=0;
+                paquete=0, apell=0, fin_nom=0,capt_tot_cols=0;
             string[] meses = new string[] {"enero","febrero","marzo","abril","mayo","junio",
                                            "julio","agosto","septiembre","octubre","noviembre","diciembre"};
 
@@ -309,6 +766,7 @@ namespace ActualizaCursos
             textBox4.Text = "";
             it = -1;
             tot_cols = 0;
+            capt_tot_cols = 0;
 
             // Imprimir o procesar cada línea
             //foreach (string linea in lineas)
@@ -317,7 +775,7 @@ namespace ActualizaCursos
                 linea=lineas[i];
 
                 //asignar columnas totales
-                if (linea.Contains("due") && tot_cols==0)
+                if (linea.Contains("due")&& capt_tot_cols ==0 )
                 {
                     string[] palabras = linea.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     
@@ -329,11 +787,7 @@ namespace ActualizaCursos
                         }
                     }
 
-                    for(int j = 0;j < tot_cols; j++)
-                    {
-                        dt.Columns.Add();
-                        dt.Columns.Add();
-                    }
+                    
                 }
 
                 
@@ -377,10 +831,23 @@ namespace ActualizaCursos
 
                     if (textBox4.Text.Length>0)
                     {
+                        if (capt_tot_cols==0) {
+                            for (int j = 0; j < tot_cols; j++)
+                            {
+                                dt.Columns.Add();
+                                dt.Columns.Add();
+                            }
+                        }
+
+                        capt_tot_cols = 1;
+
                         dt.Rows.Add();
                         it++;
                         cal_global = 0;
                         ical = 5;
+
+                        //Decodificar Bloque
+
 
                         for (int j = 0; j < textBox4.Lines.Count(); j++)
                         {
@@ -593,7 +1060,7 @@ namespace ActualizaCursos
 
             return dt;
         }
-
+                
         public Object[] exportar_fila_dgv(DataGridViewCellCollection fila_dgv)
         {
             Object[] valores = new object[fila_dgv.Count];
@@ -926,7 +1393,17 @@ namespace ActualizaCursos
                         //MessageBox.Show(dt_datos_nuevos.Rows[i].ItemArray.ToString());
                         //dt_datos_nuevos.Rows[i][7] = corrigeTel(dt_datos_nuevos.Rows[i][7].ToString());
                         dataGridView2.Rows.Add(dt_datos_nuevos.Rows[i].ItemArray);
-                        dt_datos_base.Rows.Add(dt_datos_nuevos.Rows[i][5].ToString());
+
+                        if (dt_datos_base.Rows.Count == 0)
+                        {
+                            if (dt_datos_base.Columns.Count == 0)
+                            {
+                                dt_datos_base.Columns.Add("email");
+                            }
+                        }
+                       
+                        dt_datos_base.Rows.Add(dt_datos_nuevos.Rows[i][5].ToString());//poner nuevos
+                        
                     }
                     else
                     {
@@ -1045,7 +1522,7 @@ namespace ActualizaCursos
         public void actividades()
         {
             string email = "";
-            int repetido=0, col_cont=1,indice=-1;
+            int repetido=0, col_cont=1, indice=-1, tot_asistencias = 0;
             int[] asistencia = new int[12];
             
             Decimal calificacion = 0, min_apro = 0;
@@ -1054,7 +1531,20 @@ namespace ActualizaCursos
             {
                 //no va nada
             }
-
+            /*
+            if (dt_datos_base.Rows.Count==0)
+            {
+                if (dt_datos_base.Columns.Count==0)
+                {
+                    dt_datos_base.Columns.Add("email");
+                }
+                
+                for (int i = 0; i < dt_datos_base.Rows.Count; i++)
+                {
+                    dt_datos_base.Rows.Add(dt_datos_nuevos.Rows[i][5].ToString());
+                }
+            }
+            */
             for (int i = 0; i < dt_datos_base.Rows.Count; i++)
             {
                 email = dt_datos_base.Rows[i][0].ToString();
@@ -1072,81 +1562,97 @@ namespace ActualizaCursos
                  
                 for (int l = 0; l < dt_datos_nuevos.Rows.Count; l++)
                 {
-                    if (email == dt_datos_nuevos.Rows[l][5].ToString())
+                    if (email == dt_datos_nuevos.Rows[l][5].ToString())//correo principal
+                    {
+                        indice = l;
+                        break;
+                    }
+
+                    if (email == dt_datos_nuevos.Rows[l][6].ToString())//correo secundario
                     {
                         indice = l;
                         break;
                     }
                 }
 
-                if (indice>=0) { 
-                    Object[] valores = new object[dataGridView3.Columns.Count];
-                    int tot_asistencias = 0;
-                    repetido = 0;
 
-                    valores[0] = col_cont++;
+                Object[] valores = new object[dataGridView3.Columns.Count];
+                tot_asistencias = 0;
+                repetido = 0;
+
+                valores[0] = col_cont++; //#
+
+                if (indice >= 0)
+                {
                     valores[1] = dt_datos_nuevos.Rows[indice][1].ToString();//matricula
                     valores[2] = dt_datos_nuevos.Rows[indice][2].ToString();//nombre (s)
                     valores[3] = dt_datos_nuevos.Rows[indice][3].ToString();//primer apellido
                     valores[4] = dt_datos_nuevos.Rows[indice][4].ToString();//segundo apellido
                     valores[5] = dt_datos_nuevos.Rows[indice][5].ToString();//email
+                }
+                else
+                {
+                    valores[1] = "-";//matricula
+                    valores[2] = "-";//nombre (s)
+                    valores[3] = "-";//primer apellido
+                    valores[4] = "-";//segundo apellido
+                    valores[5] = email;//email
+                }     
+
+                for (int a = 0; a < asistencia.Length; a++)
+                {
+                    tot_asistencias += asistencia[a];
+                }
 
 
-                    for (int a = 0; a < asistencia.Length; a++)
+                valores[6] = tot_asistencias;//tot_asistencias
+                valores[7] = tot_asistencias;//tot_modulos_activos
+
+                valores[8] = asistencia[0];//enero
+                valores[9] = asistencia[1];//febrero
+                valores[10] = asistencia[2];//marzo
+                valores[11] = asistencia[3];//abril
+                valores[12] = asistencia[4];//mayo
+                valores[13] = asistencia[5];//junio
+                valores[14] = asistencia[6];//julio
+                valores[15] = asistencia[7];//agosto
+                valores[16] = asistencia[8];//septiembre
+                valores[17] = asistencia[9];//octubre
+                valores[18] = asistencia[10];//noviembre
+                valores[19] = asistencia[11];//diciembre
+
+                valores[20] = " ";//deserción
+
+                calificacion = calificaciones(email);
+                valores[21] = calificacion;//calificacion
+
+
+                if (calificacion >= min_apro)//certificado
+                {
+                    valores[22] = "Certificado";
+                }
+                else
+                {
+                    valores[22] = "No Aprobado";
+                }
+
+                for (int j = 0; j < dataGridView3.Rows.Count; j++)
+                {
+                    if (email == dataGridView3[5, j].Value.ToString())
                     {
-                        tot_asistencias += asistencia[a];
-                    }
-
-
-                    valores[6] = tot_asistencias;//tot_asistencias
-                    valores[7] = tot_asistencias;//tot_modulos_activos
-
-                    valores[8] = asistencia[0];//enero
-                    valores[9] = asistencia[1];//febrero
-                    valores[10] = asistencia[2];//marzo
-                    valores[11] = asistencia[3];//abril
-                    valores[12] = asistencia[4];//mayo
-                    valores[13] = asistencia[5];//junio
-                    valores[14] = asistencia[6];//julio
-                    valores[15] = asistencia[7];//agosto
-                    valores[16] = asistencia[8];//septiembre
-                    valores[17] = asistencia[9];//octubre
-                    valores[18] = asistencia[10];//noviembre
-                    valores[19] = asistencia[11];//diciembre
-
-                    valores[20] = " ";//deserción
-
-                    calificacion = calificaciones(dt_datos_nuevos.Rows[indice][5].ToString());
-                    valores[21] = calificacion;//calificacion
-
-
-                    if (calificacion >= min_apro)//certificado
-                    {
-                        valores[22] = "Certificado";
-                    }
-                    else
-                    {
-                        valores[22] = "No Aprobado";
-                    }
-
-                    for (int j = 0; j < dataGridView3.Rows.Count; j++)
-                    {
-                        if (email == dataGridView3[5, j].Value.ToString())
-                        {
-                            repetido++;
-                        }
-                    }
-
-                    if (repetido == 0)
-                    {
-                        dataGridView3.Rows.Add(valores);
-                    }
-                    else
-                    {
-                        tot_repetidos2++;
-                        col_cont--;
+                        repetido++;
                     }
                 }
+
+                if (repetido == 0)
+                {
+                    dataGridView3.Rows.Add(valores);
+                }
+                else
+                {
+                    tot_repetidos2++;
+                    col_cont--;
+                }                
             }
 
             for (int i = 0; i < dataGridView3.Rows.Count; i++)
@@ -1282,7 +1788,8 @@ namespace ActualizaCursos
                     {
                         dt_actividades.Rows.Clear();
                         dt_actividades.Columns.Clear();
-                        dt_actividades = cargar_pdf(rutas);
+                        //dt_actividades = cargar_pdf(rutas);
+                        dt_actividades = cargar_pdf_v2(rutas);
                         //dataGridView2.DataSource= cargar_pdf(rutas);
                     }
                 }
