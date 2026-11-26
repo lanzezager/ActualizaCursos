@@ -29,15 +29,18 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle12 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle13 = new DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             DataGridViewCellStyle dataGridViewCellStyle3 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle4 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle5 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
-            DataGridViewCellStyle dataGridViewCellStyle8 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle14 = new DataGridViewCellStyle();
             DataGridViewCellStyle dataGridViewCellStyle6 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle7 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle9 = new DataGridViewCellStyle();
             label1 = new Label();
             button1 = new Button();
             button2 = new Button();
@@ -65,6 +68,7 @@
             textBox2 = new TextBox();
             button4 = new Button();
             tabPage3 = new TabPage();
+            label5 = new Label();
             tabControl2 = new TabControl();
             tabPage4 = new TabPage();
             dataGridView2 = new DataGridView();
@@ -72,10 +76,11 @@
             toolStripMenuItem2 = new ToolStripMenuItem();
             toolStripMenuItem3 = new ToolStripMenuItem();
             label2 = new Label();
+            tabPage6 = new TabPage();
+            checkBox2 = new CheckBox();
+            dataGridView4 = new DataGridView();
+            label7 = new Label();
             tabPage5 = new TabPage();
-            label5 = new Label();
-            button6 = new Button();
-            button5 = new Button();
             checkBox1 = new CheckBox();
             dataGridView3 = new DataGridView();
             Column23 = new DataGridViewTextBoxColumn();
@@ -102,6 +107,12 @@
             Column21 = new DataGridViewTextBoxColumn();
             Column22 = new DataGridViewTextBoxColumn();
             label3 = new Label();
+            tabPage7 = new TabPage();
+            dataGridView5 = new DataGridView();
+            label8 = new Label();
+            checkBox3 = new CheckBox();
+            button6 = new Button();
+            button5 = new Button();
             menuStrip1 = new MenuStrip();
             toolStripMenuItem1 = new ToolStripMenuItem();
             copiarToolStripMenuItem = new ToolStripMenuItem();
@@ -119,24 +130,30 @@
             tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             contextMenuStrip2.SuspendLayout();
+            tabPage6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).BeginInit();
             tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).BeginInit();
+            tabPage7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView5).BeginInit();
             menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(27, 29);
+            label1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label1.Location = new Point(37, 82);
             label1.Name = "label1";
-            label1.Size = new Size(135, 16);
+            label1.Size = new Size(149, 16);
             label1.TabIndex = 0;
             label1.Text = "Archivo CSV Aprender";
             // 
             // button1
             // 
+            button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             button1.Font = new Font("Arial", 9.75F, FontStyle.Bold);
-            button1.Location = new Point(456, 39);
+            button1.Location = new Point(648, 96);
             button1.Name = "button1";
             button1.Size = new Size(75, 35);
             button1.TabIndex = 1;
@@ -202,7 +219,7 @@
             tabControl1.Location = new Point(12, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(760, 402);
+            tabControl1.Size = new Size(760, 537);
             tabControl1.TabIndex = 9;
             // 
             // tabPage1
@@ -213,7 +230,7 @@
             tabPage1.Location = new Point(4, 25);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(752, 373);
+            tabPage1.Size = new Size(752, 508);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "1.- Base a Actualizar";
             tabPage1.UseVisualStyleBackColor = true;
@@ -235,29 +252,29 @@
             dataGridView1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView1.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridView1.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = Color.MediumSeaGreen;
-            dataGridViewCellStyle1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle1.ForeColor = SystemColors.ControlLightLight;
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle12.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle12.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle12.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle12.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle12.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle12.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle12.WrapMode = DataGridViewTriState.True;
+            dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle12;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView1.ContextMenuStrip = contextMenuStrip1;
             dataGridView1.EnableHeadersVisualStyles = false;
             dataGridView1.Location = new Point(6, 43);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.RowHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle2.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
-            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            dataGridView1.Size = new Size(740, 324);
+            dataGridViewCellStyle13.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle13.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle13.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle13.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle13.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle13.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle13.WrapMode = DataGridViewTriState.True;
+            dataGridView1.RowHeadersDefaultCellStyle = dataGridViewCellStyle13;
+            dataGridView1.Size = new Size(740, 459);
             dataGridView1.TabIndex = 0;
             dataGridView1.RowPostPaint += dataGridView1_RowPostPaint;
             // 
@@ -298,7 +315,7 @@
             tabPage2.Location = new Point(4, 25);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(752, 373);
+            tabPage2.Size = new Size(752, 508);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "2.- Cargar Archivos";
             tabPage2.UseVisualStyleBackColor = true;
@@ -306,31 +323,32 @@
             // textBox4
             // 
             textBox4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            textBox4.Location = new Point(36, 277);
+            textBox4.Location = new Point(263, 6);
             textBox4.Multiline = true;
             textBox4.Name = "textBox4";
             textBox4.ScrollBars = ScrollBars.Both;
-            textBox4.Size = new Size(606, 90);
+            textBox4.Size = new Size(473, 50);
             textBox4.TabIndex = 17;
             textBox4.Visible = false;
             textBox4.WordWrap = false;
             // 
             // textBox1
             // 
+            textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             textBox1.BackColor = SystemColors.ControlLightLight;
             textBox1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(27, 48);
+            textBox1.Location = new Point(36, 102);
             textBox1.Name = "textBox1";
             textBox1.ReadOnly = true;
             textBox1.RightToLeft = RightToLeft.No;
-            textBox1.Size = new Size(423, 22);
+            textBox1.Size = new Size(606, 22);
             textBox1.TabIndex = 16;
             // 
             // comboBox1
             // 
             comboBox1.Anchor = AnchorStyles.Top;
             comboBox1.FormattingEnabled = true;
-            comboBox1.Location = new Point(314, 343);
+            comboBox1.Location = new Point(295, 6);
             comboBox1.Name = "comboBox1";
             comboBox1.Size = new Size(121, 24);
             comboBox1.TabIndex = 15;
@@ -338,20 +356,23 @@
             // 
             // numericUpDown1
             // 
+            numericUpDown1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             numericUpDown1.Font = new Font("Arial", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            numericUpDown1.Location = new Point(674, 41);
+            numericUpDown1.Location = new Point(487, 434);
             numericUpDown1.Name = "numericUpDown1";
             numericUpDown1.Size = new Size(62, 29);
             numericUpDown1.TabIndex = 13;
             numericUpDown1.TextAlign = HorizontalAlignment.Center;
-            numericUpDown1.Value = new decimal(new int[] { 70, 0, 0, 0 });
+            numericUpDown1.Value = new decimal(new int[] { 80, 0, 0, 0 });
             // 
             // label11
             // 
+            label11.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             label11.AutoSize = true;
-            label11.Location = new Point(549, 40);
+            label11.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label11.Location = new Point(446, 388);
             label11.Name = "label11";
-            label11.Size = new Size(119, 32);
+            label11.Size = new Size(133, 32);
             label11.TabIndex = 12;
             label11.Text = "Calificación Mínima\r\nAprobatoria";
             label11.TextAlign = ContentAlignment.MiddleCenter;
@@ -371,7 +392,7 @@
             groupBox1.Controls.Add(button3);
             groupBox1.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             groupBox1.ForeColor = SystemColors.ControlLightLight;
-            groupBox1.Location = new Point(15, 90);
+            groupBox1.Location = new Point(15, 156);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(721, 215);
             groupBox1.TabIndex = 10;
@@ -449,9 +470,9 @@
             button4.FlatAppearance.BorderSize = 2;
             button4.Font = new Font("Arial", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             button4.ForeColor = Color.White;
-            button4.Location = new Point(633, 317);
+            button4.Location = new Point(606, 419);
             button4.Name = "button4";
-            button4.Size = new Size(103, 43);
+            button4.Size = new Size(130, 61);
             button4.TabIndex = 9;
             button4.Text = "Procesar";
             button4.UseVisualStyleBackColor = false;
@@ -459,23 +480,39 @@
             // 
             // tabPage3
             // 
+            tabPage3.Controls.Add(label5);
             tabPage3.Controls.Add(tabControl2);
+            tabPage3.Controls.Add(button6);
+            tabPage3.Controls.Add(button5);
             tabPage3.Location = new Point(4, 25);
             tabPage3.Name = "tabPage3";
-            tabPage3.Size = new Size(752, 373);
+            tabPage3.Size = new Size(752, 508);
             tabPage3.TabIndex = 2;
             tabPage3.Text = "3.- Resultados";
             tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // label5
+            // 
+            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.Location = new Point(187, 463);
+            label5.Name = "label5";
+            label5.Size = new Size(233, 34);
+            label5.TabIndex = 11;
+            label5.Text = "Repetidos Ignorados:";
+            label5.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // tabControl2
             // 
             tabControl2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             tabControl2.Controls.Add(tabPage4);
+            tabControl2.Controls.Add(tabPage6);
             tabControl2.Controls.Add(tabPage5);
+            tabControl2.Controls.Add(tabPage7);
             tabControl2.Location = new Point(3, 3);
             tabControl2.Name = "tabControl2";
             tabControl2.SelectedIndex = 0;
-            tabControl2.Size = new Size(746, 367);
+            tabControl2.Size = new Size(746, 450);
             tabControl2.TabIndex = 0;
             // 
             // tabPage4
@@ -485,7 +522,7 @@
             tabPage4.Location = new Point(4, 25);
             tabPage4.Name = "tabPage4";
             tabPage4.Padding = new Padding(3);
-            tabPage4.Size = new Size(738, 338);
+            tabPage4.Size = new Size(738, 421);
             tabPage4.TabIndex = 0;
             tabPage4.Text = "3.1 .- Nuevos Inscritos ";
             tabPage4.UseVisualStyleBackColor = true;
@@ -496,28 +533,28 @@
             dataGridView2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dataGridView2.BackgroundColor = SystemColors.ControlDarkDark;
             dataGridView2.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = Color.MediumSeaGreen;
-            dataGridViewCellStyle3.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle3.ForeColor = SystemColors.ControlLightLight;
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle1.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView2.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView2.ContextMenuStrip = contextMenuStrip2;
             dataGridView2.EnableHeadersVisualStyles = false;
             dataGridView2.Location = new Point(6, 34);
             dataGridView2.Name = "dataGridView2";
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle4.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
-            dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
-            dataGridView2.Size = new Size(726, 298);
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle2.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle2.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.True;
+            dataGridView2.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridView2.Size = new Size(726, 381);
             dataGridView2.TabIndex = 7;
             dataGridView2.RowPostPaint += dataGridView2_RowPostPaint;
             // 
@@ -554,62 +591,83 @@
             label2.Text = "Registros:";
             label2.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // tabPage6
+            // 
+            tabPage6.Controls.Add(checkBox2);
+            tabPage6.Controls.Add(dataGridView4);
+            tabPage6.Controls.Add(label7);
+            tabPage6.Location = new Point(4, 25);
+            tabPage6.Name = "tabPage6";
+            tabPage6.Size = new Size(738, 421);
+            tabPage6.TabIndex = 2;
+            tabPage6.Text = "3.2 Actividades";
+            tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(6, 8);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(262, 20);
+            checkBox2.TabIndex = 10;
+            checkBox2.Text = "Inmovilizar Columnas Datos Alumnos";
+            checkBox2.UseVisualStyleBackColor = true;
+            checkBox2.CheckedChanged += checkBox2_CheckedChanged;
+            // 
+            // dataGridView4
+            // 
+            dataGridView4.AllowUserToAddRows = false;
+            dataGridView4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView4.BackgroundColor = SystemColors.ControlDarkDark;
+            dataGridView4.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle3.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle3.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dataGridView4.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridView4.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView4.ContextMenuStrip = contextMenuStrip2;
+            dataGridView4.EnableHeadersVisualStyles = false;
+            dataGridView4.Location = new Point(6, 34);
+            dataGridView4.Name = "dataGridView4";
+            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle4.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle4.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.True;
+            dataGridView4.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridView4.Size = new Size(726, 381);
+            dataGridView4.TabIndex = 9;
+            dataGridView4.RowPostPaint += dataGridView4_RowPostPaint;
+            // 
+            // label7
+            // 
+            label7.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label7.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label7.Location = new Point(497, 3);
+            label7.Name = "label7";
+            label7.Size = new Size(233, 28);
+            label7.TabIndex = 8;
+            label7.Text = "Registros:";
+            label7.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // tabPage5
             // 
-            tabPage5.Controls.Add(label5);
-            tabPage5.Controls.Add(button6);
-            tabPage5.Controls.Add(button5);
             tabPage5.Controls.Add(checkBox1);
             tabPage5.Controls.Add(dataGridView3);
             tabPage5.Controls.Add(label3);
-            tabPage5.Location = new Point(4, 24);
+            tabPage5.Location = new Point(4, 25);
             tabPage5.Name = "tabPage5";
             tabPage5.Padding = new Padding(3);
-            tabPage5.Size = new Size(738, 339);
+            tabPage5.Size = new Size(738, 421);
             tabPage5.TabIndex = 1;
-            tabPage5.Text = "3.2.- Actividades y Calificaciones";
+            tabPage5.Text = "3.3.- Asistencias";
             tabPage5.UseVisualStyleBackColor = true;
-            // 
-            // label5
-            // 
-            label5.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label5.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label5.Location = new Point(180, 299);
-            label5.Name = "label5";
-            label5.Size = new Size(233, 34);
-            label5.TabIndex = 11;
-            label5.Text = "Repetidos Ignorados:";
-            label5.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // button6
-            // 
-            button6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button6.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            button6.Image = (Image)resources.GetObject("button6.Image");
-            button6.ImageAlign = ContentAlignment.MiddleLeft;
-            button6.Location = new Point(6, 299);
-            button6.Name = "button6";
-            button6.Size = new Size(98, 34);
-            button6.TabIndex = 10;
-            button6.Text = "Reiniciar";
-            button6.TextImageRelation = TextImageRelation.TextBeforeImage;
-            button6.UseVisualStyleBackColor = true;
-            button6.Click += button6_Click;
-            // 
-            // button5
-            // 
-            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            button5.Image = (Image)resources.GetObject("button5.Image");
-            button5.ImageAlign = ContentAlignment.MiddleLeft;
-            button5.Location = new Point(583, 299);
-            button5.Name = "button5";
-            button5.Size = new Size(149, 34);
-            button5.TabIndex = 8;
-            button5.Text = "Exportar a Excel";
-            button5.TextAlign = ContentAlignment.MiddleRight;
-            button5.TextImageRelation = TextImageRelation.TextBeforeImage;
-            button5.UseVisualStyleBackColor = true;
-            button5.Click += button5_Click;
             // 
             // checkBox1
             // 
@@ -639,26 +697,18 @@
             dataGridView3.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dataGridView3.Columns.AddRange(new DataGridViewColumn[] { Column23, Column1, Column2, Column3, Column4, Column5, Column6, Column7, Column8, Column9, Column10, Column11, Column12, Column13, Column14, Column15, Column16, Column17, Column18, Column19, Column20, Column21, Column22 });
             dataGridView3.ContextMenuStrip = contextMenuStrip2;
-            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle7.BackColor = SystemColors.Window;
-            dataGridViewCellStyle7.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle7.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.False;
-            dataGridView3.DefaultCellStyle = dataGridViewCellStyle7;
             dataGridView3.EnableHeadersVisualStyles = false;
             dataGridView3.Location = new Point(6, 34);
             dataGridView3.Name = "dataGridView3";
-            dataGridViewCellStyle8.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = SystemColors.ControlLight;
-            dataGridViewCellStyle8.Font = new Font("Arial", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            dataGridViewCellStyle8.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = DataGridViewTriState.True;
-            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            dataGridView3.Size = new Size(726, 259);
+            dataGridViewCellStyle14.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle14.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle14.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle14.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = DataGridViewTriState.True;
+            dataGridView3.RowHeadersDefaultCellStyle = dataGridViewCellStyle14;
+            dataGridView3.Size = new Size(726, 381);
             dataGridView3.TabIndex = 6;
             dataGridView3.RowPostPaint += dataGridView3_RowPostPaint;
             // 
@@ -794,6 +844,100 @@
             label3.Text = "Registros:";
             label3.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // tabPage7
+            // 
+            tabPage7.Controls.Add(dataGridView5);
+            tabPage7.Controls.Add(label8);
+            tabPage7.Controls.Add(checkBox3);
+            tabPage7.Location = new Point(4, 25);
+            tabPage7.Name = "tabPage7";
+            tabPage7.Size = new Size(738, 421);
+            tabPage7.TabIndex = 3;
+            tabPage7.Text = "3.4 Actividades Asistencias y Calificaciones";
+            tabPage7.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView5
+            // 
+            dataGridView5.AllowUserToAddRows = false;
+            dataGridView5.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dataGridView5.BackgroundColor = SystemColors.ControlDarkDark;
+            dataGridView5.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dataGridViewCellStyle7.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle7.BackColor = Color.MediumSeaGreen;
+            dataGridViewCellStyle7.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle7.ForeColor = SystemColors.ControlLightLight;
+            dataGridViewCellStyle7.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle7.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle7.WrapMode = DataGridViewTriState.True;
+            dataGridView5.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridView5.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView5.ContextMenuStrip = contextMenuStrip2;
+            dataGridView5.EnableHeadersVisualStyles = false;
+            dataGridView5.Location = new Point(6, 34);
+            dataGridView5.Name = "dataGridView5";
+            dataGridViewCellStyle9.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = SystemColors.ControlLight;
+            dataGridViewCellStyle9.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            dataGridViewCellStyle9.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle9.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = DataGridViewTriState.True;
+            dataGridView5.RowHeadersDefaultCellStyle = dataGridViewCellStyle9;
+            dataGridView5.Size = new Size(726, 381);
+            dataGridView5.TabIndex = 10;
+            // 
+            // label8
+            // 
+            label8.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            label8.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label8.Location = new Point(497, 3);
+            label8.Name = "label8";
+            label8.Size = new Size(233, 28);
+            label8.TabIndex = 9;
+            label8.Text = "Registros:";
+            label8.TextAlign = ContentAlignment.MiddleRight;
+            label8.Click += label8_Click;
+            // 
+            // checkBox3
+            // 
+            checkBox3.AutoSize = true;
+            checkBox3.Location = new Point(6, 8);
+            checkBox3.Name = "checkBox3";
+            checkBox3.Size = new Size(262, 20);
+            checkBox3.TabIndex = 8;
+            checkBox3.Text = "Inmovilizar Columnas Datos Alumnos";
+            checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // button6
+            // 
+            button6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            button6.Font = new Font("Arial", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            button6.Image = (Image)resources.GetObject("button6.Image");
+            button6.ImageAlign = ContentAlignment.MiddleLeft;
+            button6.Location = new Point(13, 463);
+            button6.Name = "button6";
+            button6.Size = new Size(98, 34);
+            button6.TabIndex = 10;
+            button6.Text = "Reiniciar";
+            button6.TextImageRelation = TextImageRelation.TextBeforeImage;
+            button6.UseVisualStyleBackColor = true;
+            button6.Click += button6_Click;
+            // 
+            // button5
+            // 
+            button5.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            button5.Image = (Image)resources.GetObject("button5.Image");
+            button5.ImageAlign = ContentAlignment.MiddleLeft;
+            button5.Location = new Point(590, 463);
+            button5.Name = "button5";
+            button5.Size = new Size(149, 34);
+            button5.TabIndex = 8;
+            button5.Text = "Exportar a Excel";
+            button5.TextAlign = ContentAlignment.MiddleRight;
+            button5.TextImageRelation = TextImageRelation.TextBeforeImage;
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // menuStrip1
             // 
             menuStrip1.Items.AddRange(new ToolStripItem[] { toolStripMenuItem1 });
@@ -834,14 +978,14 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(784, 426);
+            ClientSize = new Size(784, 561);
             Controls.Add(menuStrip1);
             Controls.Add(tabControl1);
             Icon = (Icon)resources.GetObject("$this.Icon");
             MainMenuStrip = menuStrip1;
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Actualiza Cursos v0.5.1";
+            Text = "Actualiza Cursos v0.7";
             Load += Form1_Load;
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
@@ -857,9 +1001,15 @@
             tabPage4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             contextMenuStrip2.ResumeLayout(false);
+            tabPage6.ResumeLayout(false);
+            tabPage6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView4).EndInit();
             tabPage5.ResumeLayout(false);
             tabPage5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)dataGridView3).EndInit();
+            tabPage7.ResumeLayout(false);
+            tabPage7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)dataGridView5).EndInit();
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
             ResumeLayout(false);
@@ -937,5 +1087,13 @@
         private Label label5;
         private TextBox textBox4;
         private ComboBox comboBox2;
+        private TabPage tabPage6;
+        private TabPage tabPage7;
+        private CheckBox checkBox2;
+        private DataGridView dataGridView4;
+        private Label label7;
+        private CheckBox checkBox3;
+        private Label label8;
+        private DataGridView dataGridView5;
     }
 }

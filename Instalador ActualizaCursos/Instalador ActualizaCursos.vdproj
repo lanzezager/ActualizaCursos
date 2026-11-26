@@ -198,15 +198,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ActualizaCursos"
-        "ProductCode" = "8:{150A16AA-878D-4C75-A2C2-6CF3EB3E7620}"
-        "PackageCode" = "8:{F6CA543F-0399-40A1-963F-490841670CFE}"
+        "ProductCode" = "8:{CFC80A85-C0D9-476B-9FE2-458999816A7D}"
+        "PackageCode" = "8:{D97ED3A3-F5D9-43D0-9D8B-F20B7815B0D4}"
         "UpgradeCode" = "8:{E9124328-2DC2-44F7-9B82-401B2F964C25}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:0.5.1"
+        "ProductVersion" = "8:0.6"
         "Manufacturer" = "8:LanzeZager"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -321,7 +321,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_36E72D3A8CB64ADE8D0FD5A9673332E5"
             {
-            "Name" = "8:ActualizaCursos 0.5.1"
+            "Name" = "8:ActualizaCursos 0.6"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -335,7 +335,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_A80E405F8D8B46EAB44A058AFE2AD5EC"
             {
-            "Name" = "8:ActualizaCursos 0.5.1"
+            "Name" = "8:ActualizaCursos 0.6"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
